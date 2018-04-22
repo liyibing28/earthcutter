@@ -28,3 +28,5 @@ Route::post('/add-mark', 'MapController@create');
 
 Route::post('/user/profile/update', 'ProfileController@update')->middleware('auth:api');
 
+Route::post('/sendMessage', 'MessageController@sendMessage')->middleware('auth:api');
+

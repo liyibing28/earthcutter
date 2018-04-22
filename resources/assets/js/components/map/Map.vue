@@ -9,6 +9,7 @@
                     <p v-text="infoWindow.contents"></p>
                     <mu-raised-button @click="open('bottom')">下面弹出</mu-raised-button>
                 </bm-info-window>
+
             </baidu-map>
 
             <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">

@@ -50622,6 +50622,11 @@ var routes = [{
     mata: { reqiureAuth: true }
 
 }, {
+    path: '/guest-profile',
+    name: 'guest-profile', //指定路由
+    component: __webpack_require__(135),
+    mata: {}
+}, {
     path: '/add-mark',
     name: 'add-mark',
     component: __webpack_require__(103),
@@ -51864,6 +51869,7 @@ module.exports = function listToStyles (parentId, list) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+//
 //
 //
 //
@@ -62338,6 +62344,228 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-503e1b48", module.exports)
+  }
+}
+
+/***/ }),
+/* 135 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(136)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(138)
+/* template */
+var __vue_template__ = __webpack_require__(139)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-7f364cda"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/pages/GuestProfile.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7f364cda", Component.options)
+  } else {
+    hotAPI.reload("data-v-7f364cda", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 136 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(137);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("7583c81c", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7f364cda\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuestProfile.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7f364cda\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./GuestProfile.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 137 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 138 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
+    name: "guest-profile",
+    data: function data() {
+        return {
+            dialog: false,
+            body: '',
+            user_id: '',
+            status: false
+        };
+    },
+
+    props: ['user'],
+    methods: {
+        open: function open() {
+            this.dialog = true;
+        },
+        close: function close() {
+            this.dialog = false;
+        },
+        sendMessage: function sendMessage() {
+            var _this = this;
+
+            var formData = {
+                to_user_id: 37,
+                body: this.body
+            };
+
+            axios.post('/api/sendMessage', formData).then(function (response) {
+                _this.status = response.data.status;
+                _this.close();
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 139 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("layout", { attrs: { title: "详细资料", has_menu: false } }, [
+    _c(
+      "div",
+      [
+        _c("mu-raised-button", {
+          attrs: { label: "发送私信", primary: "" },
+          on: { click: _vm.open }
+        }),
+        _vm._v(" "),
+        _c(
+          "mu-dialog",
+          {
+            attrs: { open: _vm.dialog, title: "Dialog" },
+            on: { close: _vm.close }
+          },
+          [
+            _c("mu-text-field", {
+              attrs: {
+                hintText: "多行文本输入，默认 3行，最大6行",
+                name: "body",
+                multiLine: "",
+                rows: 3,
+                rowsMax: 6,
+                fullWidth: "true"
+              },
+              model: {
+                value: _vm.body,
+                callback: function($$v) {
+                  _vm.body = $$v
+                },
+                expression: "body"
+              }
+            }),
+            _vm._v(" "),
+            _c("mu-flat-button", {
+              attrs: { slot: "actions", primary: "", label: "取消" },
+              on: { click: _vm.close },
+              slot: "actions"
+            }),
+            _vm._v(" "),
+            _c("mu-flat-button", {
+              attrs: { slot: "actions", primary: "", label: "发送" },
+              on: { click: _vm.sendMessage },
+              slot: "actions"
+            })
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7f364cda", module.exports)
   }
 }
 

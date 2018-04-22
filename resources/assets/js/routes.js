@@ -47,6 +47,12 @@ let routes = [
 
     },
     {
+        path: '/guest-profile',
+        name: 'guest-profile', //指定路由
+        component: require('./components/pages/GuestProfile'),
+        mata: {},
+    },
+    {
         path: '/add-mark',
         name: 'add-mark',
         component: require('./components/map/AddMark'),
