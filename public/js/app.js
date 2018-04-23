@@ -50636,6 +50636,14 @@ var routes = [{
     path: '/edit-profile',
     name: 'edit-profile',
     component: __webpack_require__(21)
+}, {
+    path: '/message',
+    name: 'message',
+    component: __webpack_require__(140)
+}, {
+    path: '/message/:id',
+    name: 'message-detail',
+    component: __webpack_require__(145)
 }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -51900,9 +51908,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -51929,6 +51934,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: '',
                 body: '',
                 isHidden: false
+            },
+            bounds: {
+                sw: null,
+                ne: null
             }
         };
     },
@@ -51939,17 +51948,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var point = _ref.point;
 
             this.marker = point;
-
-            //this.marker.push(this.position);
         },
         handler: function handler(_ref2) {
             var BMap = _ref2.BMap,
                 map = _ref2.map;
 
             //console.log(point);
-            this.center.lng = 110.404;
-            this.center.lat = 39.915;
-            this.zoom = 10;
+            this.center.lng = 100.404;
+            this.center.lat = 30.915;
+            this.zoom = 3;
+            console.log(map.getBounds().getSouthWest());
+            console.log(map.getBounds().getNorthEast());
         },
         infoWindowClose: function infoWindowClose(e) {
             this.infoWindow.show = false;
@@ -52264,182 +52273,183 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("layout", { attrs: { has_menu: true, title: "earthcutter" } }, [
-    _c(
-      "div",
-      { staticClass: "page_wrap" },
-      [
-        _c(
-          "baidu-map",
-          {
-            staticClass: "map",
-            attrs: { center: _vm.center, zoom: _vm.zoom },
-            on: { ready: _vm.handler, click: _vm.Mark }
+  return _c(
+    "layout",
+    { attrs: { has_menu: true, title: "earthcutter" } },
+    [
+      _c(
+        "baidu-map",
+        {
+          staticClass: "map",
+          attrs: {
+            center: _vm.center,
+            zoom: _vm.zoom,
+            "scroll-wheel-zoom": true
           },
-          [
-            _c("bm-geolocation", {
-              attrs: {
-                anchor: "BMAP_ANCHOR_BOTTOM_LEFT",
-                showAddressBar: true,
-                autoLocation: true
-              }
-            }),
-            _vm._v(" "),
-            _c("bm-navigation", {
-              attrs: { anchor: "BMAP_ANCHOR_BOTTOM_RIGHT" }
-            }),
-            _vm._v(" "),
-            _c("bm-marker", {
-              attrs: { position: { lng: _vm.marker.lng, lat: _vm.marker.lat } }
-            }),
-            _vm._v(" "),
-            _c(
-              "bm-info-window",
-              {
-                attrs: {
-                  position: { lng: _vm.marker.lng, lat: _vm.marker.lat },
-                  title: "Info Window Title",
-                  show: true
-                },
-                on: { close: _vm.infoWindowClose, open: _vm.infoWindowOpen }
-              },
-              [
-                _c("p", {
-                  domProps: { textContent: _vm._s(_vm.infoWindow.contents) }
-                }),
-                _vm._v(" "),
-                _c(
-                  "mu-raised-button",
-                  {
-                    on: {
-                      click: function($event) {
-                        _vm.open("bottom")
-                      }
-                    }
-                  },
-                  [_vm._v("下面弹出")]
-                )
-              ],
-              1
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "mu-popup",
-          {
+          on: { ready: _vm.handler, dblclick: _vm.Mark }
+        },
+        [
+          _c("bm-geolocation", {
+            attrs: { anchor: "BMAP_ANCHOR_BOTTOM_LEFT", showAddressBar: true }
+          }),
+          _vm._v(" "),
+          _c("bm-navigation", {
             attrs: {
-              position: "bottom",
-              popupClass: "demo-popup-bottom",
-              open: _vm.bottomPopup
-            },
-            on: {
-              close: function($event) {
-                _vm.close("bottom")
-              }
+              anchor: "BMAP_ANCHOR_BOTTOM_RIGHT",
+              enableGeolocation: true
             }
-          },
-          [
-            _c(
-              "mu-appbar",
-              { attrs: { title: "弹出" } },
-              [
-                _c("mu-flat-button", {
-                  attrs: { slot: "right", label: "关闭", color: "white" },
+          }),
+          _vm._v(" "),
+          _c("bm-marker", {
+            attrs: { position: { lng: _vm.marker.lng, lat: _vm.marker.lat } }
+          }),
+          _vm._v(" "),
+          _c(
+            "bm-info-window",
+            {
+              attrs: {
+                position: { lng: _vm.marker.lng, lat: _vm.marker.lat },
+                title: "Info Window Title",
+                show: true
+              },
+              on: { close: _vm.infoWindowClose, open: _vm.infoWindowOpen }
+            },
+            [
+              _c("p", {
+                domProps: { textContent: _vm._s(_vm.infoWindow.contents) }
+              }),
+              _vm._v(" "),
+              _c(
+                "mu-raised-button",
+                {
                   on: {
                     click: function($event) {
-                      _vm.close("bottom")
+                      _vm.open("bottom")
                     }
-                  },
-                  slot: "right"
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "mu-content-block",
-              [
-                _c(
-                  "mu-select-field",
-                  {
-                    attrs: {
-                      labelFocusClass: ["label-foucs"],
-                      label: "选择分享类型"
-                    },
-                    model: {
-                      value: _vm.addMarkerInfo.markerType,
-                      callback: function($$v) {
-                        _vm.$set(_vm.addMarkerInfo, "markerType", $$v)
-                      },
-                      expression: "addMarkerInfo.markerType"
-                    }
-                  },
-                  _vm._l(_vm.list, function(text, index) {
-                    return _c("mu-menu-item", {
-                      key: index,
-                      attrs: { value: index, title: text }
-                    })
-                  })
-                ),
-                _vm._v(" "),
-                _c("mu-text-field", {
-                  attrs: { label: "简介", hintText: "请输入一些简单介绍" },
-                  model: {
-                    value: _vm.addMarkerInfo.title,
-                    callback: function($$v) {
-                      _vm.$set(_vm.addMarkerInfo, "title", $$v)
-                    },
-                    expression: "addMarkerInfo.title"
                   }
-                }),
-                _c("br"),
-                _vm._v(" "),
-                _c("mu-text-field", {
+                },
+                [_vm._v("下面弹出")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "mu-popup",
+        {
+          attrs: {
+            position: "bottom",
+            popupClass: "demo-popup-bottom",
+            open: _vm.bottomPopup
+          },
+          on: {
+            close: function($event) {
+              _vm.close("bottom")
+            }
+          }
+        },
+        [
+          _c(
+            "mu-appbar",
+            { attrs: { title: "弹出" } },
+            [
+              _c("mu-flat-button", {
+                attrs: { slot: "right", label: "关闭", color: "white" },
+                on: {
+                  click: function($event) {
+                    _vm.close("bottom")
+                  }
+                },
+                slot: "right"
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "mu-content-block",
+            [
+              _c(
+                "mu-select-field",
+                {
                   attrs: {
-                    hintText: "请输入详细介绍",
-                    multiLine: "",
-                    rows: 3,
-                    rowsMax: 6
+                    labelFocusClass: ["label-foucs"],
+                    label: "选择分享类型"
                   },
                   model: {
-                    value: _vm.addMarkerInfo.body,
+                    value: _vm.addMarkerInfo.markerType,
                     callback: function($$v) {
-                      _vm.$set(_vm.addMarkerInfo, "body", $$v)
+                      _vm.$set(_vm.addMarkerInfo, "markerType", $$v)
                     },
-                    expression: "addMarkerInfo.body"
+                    expression: "addMarkerInfo.markerType"
                   }
-                }),
-                _c("br"),
-                _vm._v(" "),
-                _c("mu-switch", {
-                  attrs: { label: "仅自己可见" },
-                  model: {
-                    value: _vm.addMarkerInfo.isHidden,
-                    callback: function($$v) {
-                      _vm.$set(_vm.addMarkerInfo, "isHidden", $$v)
-                    },
-                    expression: "addMarkerInfo.isHidden"
-                  }
-                }),
-                _c("br"),
-                _vm._v(" "),
-                _c(
-                  "mu-raised-button",
-                  { attrs: { primary: "" }, on: { click: _vm.addMark } },
-                  [_vm._v("创建")]
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      ],
-      1
-    )
-  ])
+                },
+                _vm._l(_vm.list, function(text, index) {
+                  return _c("mu-menu-item", {
+                    key: index,
+                    attrs: { value: index, title: text }
+                  })
+                })
+              ),
+              _vm._v(" "),
+              _c("mu-text-field", {
+                attrs: { label: "简介", hintText: "请输入一些简单介绍" },
+                model: {
+                  value: _vm.addMarkerInfo.title,
+                  callback: function($$v) {
+                    _vm.$set(_vm.addMarkerInfo, "title", $$v)
+                  },
+                  expression: "addMarkerInfo.title"
+                }
+              }),
+              _c("br"),
+              _vm._v(" "),
+              _c("mu-text-field", {
+                attrs: {
+                  hintText: "请输入详细介绍",
+                  multiLine: "",
+                  rows: 3,
+                  rowsMax: 6
+                },
+                model: {
+                  value: _vm.addMarkerInfo.body,
+                  callback: function($$v) {
+                    _vm.$set(_vm.addMarkerInfo, "body", $$v)
+                  },
+                  expression: "addMarkerInfo.body"
+                }
+              }),
+              _c("br"),
+              _vm._v(" "),
+              _c("mu-switch", {
+                attrs: { label: "仅自己可见" },
+                model: {
+                  value: _vm.addMarkerInfo.isHidden,
+                  callback: function($$v) {
+                    _vm.$set(_vm.addMarkerInfo, "isHidden", $$v)
+                  },
+                  expression: "addMarkerInfo.isHidden"
+                }
+              }),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "mu-raised-button",
+                { attrs: { primary: "" }, on: { click: _vm.addMark } },
+                [_vm._v("创建")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -62566,6 +62576,407 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-7f364cda", module.exports)
+  }
+}
+
+/***/ }),
+/* 140 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(141)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(143)
+/* template */
+var __vue_template__ = __webpack_require__(144)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-0f5cba8b"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/message/Messages.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0f5cba8b", Component.options)
+  } else {
+    hotAPI.reload("data-v-0f5cba8b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(142);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("6a8afa14", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0f5cba8b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Messages.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0f5cba8b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Messages.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 142 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 143 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
+    name: "messages",
+    data: function data() {
+        return {
+            messages: []
+        };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        axios.post('/api/message').then(function (response) {
+            _this.messages = response.data; //两个data是因为后端有分页
+            console.log(_this.messages);
+        });
+    }
+});
+
+/***/ }),
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "layout",
+    { attrs: { title: "消息记录", has_menu: true } },
+    [
+      _c(
+        "mu-list",
+        [
+          _vm._l(_vm.messages, function(message) {
+            return _c(
+              "mu-list-item",
+              {
+                key: message[0].id,
+                attrs: { title: message[0].from_user_name }
+              },
+              [
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      slot: "describe",
+                      to: {
+                        name: "message-detail",
+                        params: { id: message[0].from_user_id }
+                      }
+                    },
+                    slot: "describe"
+                  },
+                  [_vm._v(_vm._s(message[0].body))]
+                ),
+                _vm._v(" "),
+                _c(
+                  "mu-icon-menu",
+                  {
+                    attrs: {
+                      slot: "right",
+                      icon: "more_vert",
+                      tooltip: "操作"
+                    },
+                    slot: "right"
+                  },
+                  [
+                    _c("mu-menu-item", { attrs: { title: "回复" } }),
+                    _vm._v(" "),
+                    _c("mu-menu-item", { attrs: { title: "删除" } })
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c("mu-divider", { attrs: { inset: "" } })
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0f5cba8b", module.exports)
+  }
+}
+
+/***/ }),
+/* 145 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(146)
+}
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(148)
+/* template */
+var __vue_template__ = __webpack_require__(149)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-cde384ee"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/message/MessageDetail.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cde384ee", Component.options)
+  } else {
+    hotAPI.reload("data-v-cde384ee", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 146 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(147);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(3)("3681ae34", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-cde384ee\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MessageDetail.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-cde384ee\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MessageDetail.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 147 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 148 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
+    name: "message-detail",
+    data: function data() {
+        return {
+            messages: []
+        };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        axios.post('/api/message/' + this.$route.params.id).then(function (response) {
+            _this.messages = response.data; //两个data是因为后端有分页
+            console.log(_this.messages);
+        });
+    }
+});
+
+/***/ }),
+/* 149 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "layout",
+    { attrs: { title: "详情", has_menu: false } },
+    [
+      _c(
+        "mu-list",
+        [
+          _vm._l(_vm.messages, function(message) {
+            return _c(
+              "mu-list-item",
+              { key: message.id, attrs: { title: message.from_user_name } },
+              [
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      slot: "describe",
+                      to: {
+                        name: "message-detail",
+                        params: { id: message.from_user_id }
+                      }
+                    },
+                    slot: "describe"
+                  },
+                  [_vm._v(_vm._s(message.body))]
+                )
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c("mu-divider", { attrs: { inset: "" } })
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-cde384ee", module.exports)
   }
 }
 

@@ -1,14 +1,10 @@
 <template>
     <layout title="消息记录" :has_menu="true">
         <mu-list>
-            <mu-list-item title="这个周末一起吃饭么?">
-                <mu-avatar src="/images/avatar1.jpg" slot="leftAvatar"/>
-                <span slot="describe">
-        <span style="color: rgba(0, 0, 0, .87)">Myron Liu -</span> 周末要来你这里出差，要不要一起吃个饭呀，实在编不下去了,哈哈哈哈哈哈
-      </span>
+            <mu-list-item v-for="message in messages" :key="message[0].id" :title="message[0].from_user_name">
+                <router-link :to="{ name: 'message-detail', params:{id : message[0].from_user_id }}" slot="describe">{{message[0].body}}</router-link>
                 <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
                     <mu-menu-item title="回复" />
-                    <mu-menu-item title="标记" />
                     <mu-menu-item title="删除" />
                 </mu-icon-menu>
             </mu-list-item>
@@ -22,7 +18,18 @@
 
     export default {
         components: {Layout},
-        name: "messages"
+        name: "messages",
+        data(){
+            return {
+               messages : [],
+            }
+        },
+        mounted(){
+            axios.post('/api/message').then(response => {
+                this.messages = response.data; //两个data是因为后端有分页
+                console.log(this.messages);
+            });
+        }
     }
 </script>
 

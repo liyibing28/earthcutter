@@ -63,6 +63,16 @@ let routes = [
         path:'/edit-profile',
         name: 'edit-profile',
         component: require('./components/user/EditProfile')
+    },
+    {
+        path:'/message',
+        name: 'message',
+        component: require('./components/message/Messages')
+    },
+    {
+        path:'/message/:id',
+        name: 'message-detail',
+        component: require('./components/message/MessageDetail')
     }
 ];
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     protected $table = 'messages';
-    protected $fillable = ['from_user_id','to_user_id','body'];
+    protected $fillable = ['from_user_id','to_user_id','body','user','friend','from_user_name'];
 
     //定义与User的关系
     public function fromUser(){

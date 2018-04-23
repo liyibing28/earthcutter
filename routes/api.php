@@ -30,3 +30,6 @@ Route::post('/user/profile/update', 'ProfileController@update')->middleware('aut
 
 Route::post('/sendMessage', 'MessageController@sendMessage')->middleware('auth:api');
 
+Route::post('/message', 'MessageController@messages')->middleware('auth:api');
+Route::post('/message/{user_id}', 'MessageController@show')->middleware('auth:api');
+

@@ -1,18 +1,16 @@
 <template>
     <layout :has_menu="true" title="earthcutter">
-        <div class="page_wrap" >
-            <baidu-map class="map" :center="center" :zoom="zoom" @ready="handler" @click="Mark">
-                <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_LEFT" :showAddressBar="true" :autoLocation="true" ></bm-geolocation>
-                <bm-navigation anchor="BMAP_ANCHOR_BOTTOM_RIGHT"></bm-navigation>
+            <baidu-map class="map" :center="center" :zoom="zoom" @ready="handler" @dblclick="Mark" :scroll-wheel-zoom="true">
+                <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_LEFT" :showAddressBar="true"></bm-geolocation>
+                <bm-navigation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :enableGeolocation="true" ></bm-navigation>
                 <bm-marker :position="{lng: marker.lng, lat: marker.lat}"></bm-marker>
                 <bm-info-window :position="{lng: marker.lng, lat: marker.lat}" title="Info Window Title" :show="true" @close="infoWindowClose" @open="infoWindowOpen">
                     <p v-text="infoWindow.contents"></p>
                     <mu-raised-button @click="open('bottom')">下面弹出</mu-raised-button>
                 </bm-info-window>
-
             </baidu-map>
 
-            <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">
+        <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">
                 <mu-appbar title="弹出">
                     <mu-flat-button slot="right" label="关闭" color="white" @click="close('bottom')"/>
                 </mu-appbar>
@@ -28,7 +26,6 @@
 
                 </mu-content-block>
             </mu-popup>
-        </div>
     </layout>
 </template>
 
@@ -58,6 +55,10 @@
                     title: '',
                     body: '',
                     isHidden: false,
+                },
+                bounds : {
+                    sw : null,
+                    ne : null,
                 }
             }
         },
@@ -67,14 +68,14 @@
         methods:{
             Mark({point}){
                 this.marker = point;
-
-                //this.marker.push(this.position);
             },
             handler ({BMap, map}) {
                 //console.log(point);
-                this.center.lng = 110.404;
-                this.center.lat = 39.915;
-                this.zoom = 10;
+                this.center.lng = 100.404;
+                this.center.lat = 30.915;
+                this.zoom = 3;
+                console.log(map.getBounds().getSouthWest());
+                console.log(map.getBounds().getNorthEast());
             },
             infoWindowClose (e) {
                 this.infoWindow.show = false
