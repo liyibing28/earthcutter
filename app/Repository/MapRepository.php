@@ -26,4 +26,8 @@ class MapRepository
     public function find($markerId){
         return Map::where('id',$markerId)->with('User')->get();
     }
+
+    public function findUserMarkers($userId){
+        return Map::where('user_id',$userId)->get();
+    }
 }

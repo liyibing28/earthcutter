@@ -55,7 +55,7 @@
                     icon: 'favorite',
                 },{
                     title: '我的',
-                    path: '/profile',
+                    path: '/me',
                     icon: 'people',
                 }],
                 open: false,

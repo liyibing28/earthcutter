@@ -10,4 +10,7 @@ class Favorite extends Model
 
     protected $fillable = ['user_id','map_id'];
 
+    public function Map(){
+        return $this->belongsTo(Map::class,'map_id');
+    }
 }

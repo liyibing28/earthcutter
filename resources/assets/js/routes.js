@@ -40,6 +40,13 @@ let routes = [
         meta: {},
     },
     {
+        path: '/me',
+        name: 'me',
+        component: require('./components/common/Me'),
+        meta: { reqiureAuth: true }
+
+    },
+    {
         path: '/profile',
         name: 'profile',
         component: require('./components/user/Profile'),
@@ -83,6 +90,18 @@ let routes = [
         path:'/favorite',
         name: 'favorite',
         component: require('./components/favorite/Favorite'),
+        meta: { reqiureAuth: true}
+    },
+    {
+        path:'/myMarker',
+        name: 'myMarker',
+        component: require('./components/user/MyMarkers'),
+        meta: { reqiureAuth: true}
+    },
+    {
+        path:'/myComments',
+        name: 'myComments',
+        component: require('./components/user/MyComments'),
         meta: { reqiureAuth: true}
     }
 ];

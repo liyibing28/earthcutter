@@ -28,6 +28,9 @@ return [
 
     'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -62,6 +65,15 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
+        ],
+
+        'upyun' => [
+            'driver'        => 'upyun',
+            'bucket'        => 'earthcutter-demo',// 服务名字
+            'operator'      => env('UPYUN_OPERATOR_NAME'), // 操作员的名字
+            'password'      => env('UPYUN_OPERATOR_PASSWORD'), // 操作员的密码
+            'domain'        => 'earthcutter-demo.test.upcdn.net', // 服务分配的域名
+            'protocol'     => 'http', // 服务使用的协议，如需使用 http，在此配置 http
         ],
 
     ],

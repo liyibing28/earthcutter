@@ -13,4 +13,8 @@ class Comment extends Model
     public function User(){
         return $this->belongsTo(User::class,'user_id');
     }
+
+    public function Map(){
+        return $this->belongsTo(Map::class,'marker_id');
+    }
 }

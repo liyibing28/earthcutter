@@ -59,4 +59,11 @@ class MapController extends Controller
         //$data = null;
         return response()->json($data);
     }
+
+    public function showMyMarkers(){
+        $user_id = auth()->guard('api')->user()->id;
+        $data = $this->mapRepository->findUserMarkers($user_id);
+        //$data = null;
+        return response()->json($data);
+    }
 }

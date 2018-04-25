@@ -40,3 +40,9 @@ Route::get('/show-comments/{markerId}', 'CommentController@showComments');
 Route::post('/addComments','CommentController@addComments')->middleware('auth:api');
 Route::post('/add-favorite/{markerId}','FavoriteController@addFavorite')->middleware('auth:api');
 Route::post('/is-favorited/{markerId}','FavoriteController@isFavorited')->middleware('auth:api');
+Route::post('/show-favorite','FavoriteController@showFavorite')->middleware('auth:api');
+Route::post('/my-markers','MapController@showMyMarkers')->middleware('auth:api');
+Route::post('/my-comments','CommentController@showMyComments')->middleware('auth:api');
+
+Route::post('/changAvatar','UserController@ChangAvatar')->middleware('auth:api');
+

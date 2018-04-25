@@ -26,6 +26,15 @@ class CommentController extends Controller
         return response()->json($comments);
     }
 
+    public function showMyComments(){
+        $user_id = auth()->guard('api')->user()->id;
+        $comments = $this->commentRepositry->showByUser($user_id);
+
+        return response()->json($comments);
+    }
+
+
+
     public function addComments(){
 
         $comment = $this->commentRepositry->create([

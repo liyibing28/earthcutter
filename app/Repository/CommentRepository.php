@@ -17,6 +17,10 @@ class CommentRepository
         return Comment::where('marker_id',$markerId)->with('User')->get();
     }
 
+    public function showByUser($user_id){
+        return Comment::where('user_id',$user_id)->with('Map')->get();
+    }
+
     public function create(array $attributes){
         return Comment::create($attributes);
     }
