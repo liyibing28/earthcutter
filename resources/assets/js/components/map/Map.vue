@@ -1,16 +1,21 @@
 <template>
     <layout :has_menu="true" title="earthcutter">
-            <baidu-map class="map" :center="center" :zoom="zoom" @ready="handler" @dblclick="Mark" :scroll-wheel-zoom="true">
-                <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_LEFT" :showAddressBar="true"></bm-geolocation>
-                <bm-navigation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :enableGeolocation="true" ></bm-navigation>
-                <bm-marker :position="{lng: marker.lng, lat: marker.lat}"></bm-marker>
-                <bm-info-window :position="{lng: marker.lng, lat: marker.lat}" title="Info Window Title" :show="true" @close="infoWindowClose" @open="infoWindowOpen">
-                    <p v-text="infoWindow.contents"></p>
-                    <mu-raised-button @click="open('bottom')">下面弹出</mu-raised-button>
-                </bm-info-window>
-            </baidu-map>
+        <div class="amap-wrapper">
+            <el-amap class="amap-box" ref="map"  vid="amap" :amap-manager="amapManager" :plugin="plugin" :center="center" :events="events">
+                <!--//添加标记-->
+                <el-amap-marker vid="add-marker" :position="marker.position" :visible="marker.visible" :draggable="marker.draggable" ></el-amap-marker>
+                <el-amap-info-window vid="add-marker-info-window" :position="marker.position" :visible="markerWindow.visible" :autoMove="true">
+                    <p>address: {{ marker.address }}</p>
+                    <mu-raised-button label="下面弹出" @click="open('bottom')"/>
+                </el-amap-info-window>
 
-        <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">
+                <!--//展示已存在标记-->
+                <el-amap-marker v-for="marker11 in markers" :key="marker11.id" :position="marker11.position" ></el-amap-marker>
+                <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :content="window.content"></el-amap-info-window>
+
+            </el-amap>
+
+            <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">
                 <mu-appbar title="弹出">
                     <mu-flat-button slot="right" label="关闭" color="white" @click="close('bottom')"/>
                 </mu-appbar>
@@ -26,28 +31,135 @@
 
                 </mu-content-block>
             </mu-popup>
+        </div>
+
+
     </layout>
 </template>
 
 <script>
+    import { AMapManager } from 'vue-amap';
+    import VueAMap from "vue-amap";
     import Layout from "../common/Layout";
     export default {
         components: {
             Layout
         },
         data() {
+            let self = this;
             return {
-                center: {lng:0, lat:0},
-                markers: [],
-                marker: {lng:0, lat:0 },
-                zoom:3,
-                position: '',
-                bottomPopup: false,
-                infoWindow: {
-                    show: true,
-                    contents: '新增标记点'
+                amapManager : new VueAMap.AMapManager(),
+                bounds:{},
+                center: [121.518658, 25.038462],
+                lng: 0,
+                lat: 0,
+                plugin: [{
+                    pName: 'ToolBar',
+                    events: {
+                        init(instance) {
+                            //console.log(instance);
+                        }
+                    }
+                }],
+                marker : {
+                    position : [0,0],
+                    visible: false,
+                    draggable: true,
+                    clickable: true,
+                    address : '',
                 },
-                //markerType: 0,
+                markerWindow: {
+                    //template: '<mu-raised-button label="下面弹出" @click="open(\'bottom\')"/>',
+                    autoMove: true,
+                    visible:false,
+                },
+                markers : [
+                    {
+                        position: [121.5273285, 31.21515044],
+                        visible: true,
+                        draggable: false,
+                        template: '<span>1</span>',
+                    }
+                ],
+                points: [],
+                windows: [],
+                window: '',
+                events: {
+                    init: (o) => {
+                        //console.log(o.getCenter());
+                        //console.log(this.$refs.map.$$getInstance());
+                        o.getCity(result => {
+                            //console.log(result)
+                        })
+                    },
+                    'moveend': () => {
+                    },
+                    'zoomchange': () => {
+                    },
+                    'click': (e) => {
+                        console.log(e.lnglat);
+                        this.marker.visible = false;
+                        this.markerWindow.visible = false;
+                        this.marker.position = [e.lnglat.lng, e.lnglat.lat];
+                        this.marker.visible = true;
+                        this.markerWindow.visible = true;
+
+                        // 这里通过高德 SDK 完成。
+
+                        let geocoder = new AMap.Geocoder({
+                            radius: 1000,
+                            extensions: "all"
+                        });
+                        geocoder.getAddress(self.marker.position, function(status, result) {
+                            if (status === 'complete' && result.info === 'OK') {
+                                if (result && result.regeocode) {
+                                    self.marker.address = result.regeocode.formattedAddress;
+                                    self.$nextTick();
+                                }
+                            }
+                        });
+                    },
+                    'complete': () => {
+                        this.bounds = this.amapManager.getMap().getBounds();
+                        console.log(this.bounds);
+                        let formData = {
+                            north : this.bounds.northeast.lat,
+                            east : this.bounds.northeast.lng,
+                            south : this.bounds.southwest.lat,
+                            west : this.bounds.southwest.lng,
+                        };
+                        console.log(formData);
+                        axios.get('/api/show-mark',formData).then(response => {
+                            console.log(response.data);
+                            this.points = response.data;
+                            console.log(this.points.length);
+                            for(let i=0; i < this.points.length; i++){
+                                let marker = {
+                                    position: [this.points[i].longitude,this.points[i].latitude],
+                                    events: {
+                                        click() {
+                                            this.windows.forEach(window => {
+                                                window.visible = false;
+                                            });
+
+                                            this.window = this.windows[i];
+                                            self.$nextTick(() => {
+                                                this.window.visible = true;
+                                            });
+                                        }
+                                    }
+                                };
+                                this.markers.push(marker);
+                                this.windows.push({
+                                    position: [this.points[i].longitude,this.points[i].latitude],
+                                    content: `<div class="prompt">${ i }</div>`,
+                                    visible: false
+                                });
+                            }
+                        });
+
+                    }
+                },
                 list: ['营地', '路况', '风景', '天气'],
                 toggle: true,
                 addMarkerInfo: {
@@ -56,46 +168,28 @@
                     body: '',
                     isHidden: false,
                 },
-                bounds : {
-                    sw : null,
-                    ne : null,
-                }
+                //底部弹出组件
+                bottomPopup: false,
             }
         },
         mounted(){
-
         },
         methods:{
-            Mark({point}){
-                this.marker = point;
-            },
-            handler ({BMap, map}) {
-                //console.log(point);
-                this.center.lng = 100.404;
-                this.center.lat = 30.915;
-                this.zoom = 3;
-                console.log(map.getBounds().getSouthWest());
-                console.log(map.getBounds().getNorthEast());
-            },
-            infoWindowClose (e) {
-                this.infoWindow.show = false
-            },
-            infoWindowOpen (e) {
-                this.infoWindow.show = true
-            },
             addMark(){
                 let formData ={
                     markerType : this.addMarkerInfo.markerType,
                     title : this.addMarkerInfo.title,
                     body : this.addMarkerInfo.body,
                     isHidden : this.addMarkerInfo.isHidden,
-                    lng : this.marker.lng,
-                    lat : this.marker.lat,
+                    lng : this.marker.position[0],
+                    lat : this.marker.position[1],
                 };
                 axios.post('/api/add-mark',formData).then(response => {
                     console.log(response.data);
                 });
             },
+
+            //底部弹出组件
             open (position) {
                 this[position + 'Popup'] = true
             },
@@ -109,6 +203,13 @@
 
 <style scoped lang="less">
     @import url('./../../../less/common.less');
+
+    .search-box {
+        //position: absolute;
+        margin-top: 5px;
+        width: 80%;
+        left: 5px;
+    }
     .page_wrap {
         width: 100%;
         height: 100%;
@@ -120,12 +221,17 @@
         }
     }
     .map {
-        width: 100%;
+        width: 100px;
         height: 400px;
     }
     .demo-popup-bottom {
         width: 100%;
         max-width: 700px;
+    }
+
+    .amap-wrapper {
+        width: 100%;
+        height: 500px;
     }
 
 </style>

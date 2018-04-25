@@ -16,7 +16,8 @@ import 'muse-ui/dist/muse-ui.css';
 import App from './components/App'
 import VeeValidate from 'vee-validate';
 import jwtToken from './helpers/jwt';
-import BaiduMap from 'vue-baidu-map'
+import VueAMap from 'vue-amap';
+// import BaiduMap from 'vue-baidu-map'
 
 
 axios.interceptors.request.use(function (config) {
@@ -33,10 +34,18 @@ axios.interceptors.request.use(function (config) {
 Vue.use(VueRouter);
 Vue.use(MuseUI);
 Vue.use(VeeValidate);
-
-Vue.use(BaiduMap, {
+Vue.use(VueAMap);
+//
+// Vue.use(BaiduMap, {
     // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
-    ak: '1hfCQtjMGprIZn7DxUQcCdt57k270GLl'
+    // ak: '1hfCQtjMGprIZn7DxUQcCdt57k270GLl'
+// });
+
+VueAMap.initAMapApiLoader({
+    key: 'e29bd81fa85d6b97a3db2b05e655fc2b',
+    plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','Geocoder'],
+    // 默认高德 sdk 版本为 1.4.4
+    v: '1.4.4'
 });
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -51,5 +60,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 new Vue({
     el: '#app',
     router,
-    store
+    store,
+    render: h => h(App)
 });

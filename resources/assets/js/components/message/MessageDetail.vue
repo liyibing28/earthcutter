@@ -22,7 +22,7 @@
         },
         mounted(){
             axios.post('/api/message/' + this.$route.params.id).then(response => {
-                this.messages = response.data; //两个data是因为后端有分页
+                this.messages = response.data;
                 console.log(this.messages);
             });
         }

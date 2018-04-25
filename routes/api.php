@@ -33,3 +33,5 @@ Route::post('/sendMessage', 'MessageController@sendMessage')->middleware('auth:a
 Route::post('/message', 'MessageController@messages')->middleware('auth:api');
 Route::post('/message/{user_id}', 'MessageController@show')->middleware('auth:api');
 
+Route::get('/show-mark', 'MapController@show');
+Route::get('/show-mark/{markerId}', 'MapController@showMarker');

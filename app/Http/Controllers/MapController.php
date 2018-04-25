@@ -40,4 +40,23 @@ class MapController extends Controller
 
 
     }
+
+    public function show(){
+        $data = [
+            'north' => \request('north'),
+            'east' => \request('east'),
+            'south' => \request('south'),
+            'west' => \request('west'),
+        ];
+
+        $markers = $this->mapRepository->show($data);
+
+        return response()->json($markers);
+    }
+
+    public function showMarker($markerId){
+        $data = $this->mapRepository->find($markerId);
+        //$data = null;
+        return response()->json($data);
+    }
 }

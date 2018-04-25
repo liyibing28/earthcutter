@@ -17,4 +17,13 @@ class MapRepository
     {
         return Map::create($attributes);
     }
+
+    public function show(array $attributes){
+        return Map::all();
+        //return Map::where(['latitude','<=',$attributes['north']],['latitude','>=',$attributes['south']],['longitude','<=',$attributes['east']],['longitude','>=',$attributes['west']]);
+    }
+
+    public function find($markerId){
+        return Map::where('id',$markerId)->with('User')->get();
+    }
 }

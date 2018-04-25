@@ -12,7 +12,7 @@ let routes = [
     {
         path : '/',
         name : 'home',
-        component : require('./components/pages/Home'),
+        component : require('./components/map/Map'),
         mata: {},
     },
     {
@@ -73,6 +73,11 @@ let routes = [
         path:'/message/:id',
         name: 'message-detail',
         component: require('./components/message/MessageDetail')
+    },
+    {
+        path:'/map/:id',
+        name: 'mark-detail',
+        component: require('./components/map/MarkDetail')
     }
 ];
 
