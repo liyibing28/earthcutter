@@ -44,5 +44,5 @@ Route::post('/show-favorite','FavoriteController@showFavorite')->middleware('aut
 Route::post('/my-markers','MapController@showMyMarkers')->middleware('auth:api');
 Route::post('/my-comments','CommentController@showMyComments')->middleware('auth:api');
 
-Route::post('/changAvatar','UserController@ChangAvatar')->middleware('auth:api');
+Route::post('/avatar','UsersController@changAvatar');
 

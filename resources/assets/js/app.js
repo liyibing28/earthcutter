@@ -18,6 +18,8 @@ import VeeValidate from 'vee-validate';
 import jwtToken from './helpers/jwt';
 import VueAMap from 'vue-amap';
 // import BaiduMap from 'vue-baidu-map'
+import VueCoreImageUpload from 'vue-core-image-upload';
+//import VueCoreImageUpload from 'vue-core-image-upload/dist/ssr';
 
 
 axios.interceptors.request.use(function (config) {
@@ -35,6 +37,7 @@ Vue.use(VueRouter);
 Vue.use(MuseUI);
 Vue.use(VeeValidate);
 Vue.use(VueAMap);
+Vue.use( VueCoreImageUpload );
 //
 // Vue.use(BaiduMap, {
     // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */

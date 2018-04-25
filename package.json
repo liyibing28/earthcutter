@@ -29,6 +29,7 @@
         "vee-validate": "^2.0.6",
         "vue-amap": "^0.5.4",
         "vue-baidu-map": "^0.21.6",
+        "vue-core-image-upload": "^2.4.5",
         "vue-router": "^3.0.1",
         "vuex": "^3.0.1"
     }
