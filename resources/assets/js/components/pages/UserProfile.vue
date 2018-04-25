@@ -3,7 +3,7 @@
         <div>
             <mu-raised-button label="发送私信" @click="open" primary/>
             <mu-dialog :open="dialog" title="Dialog" @close="close">
-                <mu-text-field v-model="body" hintText="多行文本输入，默认 3行，最大6行" name="body" multiLine :rows="3" :rowsMax="6" fullWidth="true"/>
+                <mu-text-field v-model="body" hintText="多行文本输入，默认 3行，最大6行" name="body" multiLine :rows="3" :rowsMax="6" :fullWidth="true"/>
                 <mu-flat-button slot="actions" @click="close" primary label="取消"/>
                 <mu-flat-button slot="actions" primary @click="sendMessage" label="发送"/>
             </mu-dialog>

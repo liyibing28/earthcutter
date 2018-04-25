@@ -7,56 +7,56 @@ let routes = [
         path : '/map',
         name : 'map',
         component : require('./components/map/Map'),
-        mata : {},
+        meta : {},
     },
     {
         path : '/',
         name : 'home',
         component : require('./components/map/Map'),
-        mata: {},
+        meta: {},
     },
     {
         path: '/posts/:id',
         name: 'posts', //指定路由
         component: require('./components/post/Post'),
-        mata: {},
+        meta: {},
     },
     {
         path: '/register',
         name: 'register', //指定路由
         component: require('./components/register/Register'),
-        mata: { requireGuest: true },
+        meta: { requireGuest: true },
     },
     {
         path: '/login',
         name: 'login', //指定路由
         component: require('./components/login/Login'),
-        mata: { requireGuest: true },
+        meta: { requireGuest: true },
     },
     {
         path: '/confirm',
         name: 'confirm', //指定路由
         component: require('./components/pages/Email'),
-        mata: {},
+        meta: {},
     },
     {
         path: '/profile',
         name: 'profile',
         component: require('./components/user/Profile'),
-        mata: { reqiureAuth: true }
+        meta: { reqiureAuth: true }
 
     },
     {
         path: '/guest-profile',
         name: 'guest-profile', //指定路由
-        component: require('./components/pages/GuestProfile'),
-        mata: {},
+        component: require('./components/pages/UserProfile'),
+        meta: {},
     },
     {
         path: '/add-mark',
         name: 'add-mark',
         component: require('./components/map/AddMark'),
-        mata: { reqiureAuth: true }
+        meta: { reqiureAuth: true }
 
     },
     {
@@ -78,6 +78,12 @@ let routes = [
         path:'/map/:id',
         name: 'mark-detail',
         component: require('./components/map/MarkDetail')
+    },
+    {
+        path:'/favorite',
+        name: 'favorite',
+        component: require('./components/favorite/Favorite'),
+        meta: { reqiureAuth: true}
     }
 ];
 

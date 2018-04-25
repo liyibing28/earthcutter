@@ -28,6 +28,18 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function favorite( ){
+        return $this->belongsToMany(Map::class,'user_map')->withTimestamps();
+    }
+
+    public function addFavoriteThis($map){
+         return $this->favorite()->toggle($map);
+    }
+
+    public function followed($map){ //用户已经收藏这个问题
+        return !! $this->favorite()->where('map_id',$map)->count( );
+    }
+
     public function messages(){
         return $this->hasMany(Message::class,'to_user_id');
     }

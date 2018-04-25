@@ -35,3 +35,8 @@ Route::post('/message/{user_id}', 'MessageController@show')->middleware('auth:ap
 
 Route::get('/show-mark', 'MapController@show');
 Route::get('/show-mark/{markerId}', 'MapController@showMarker');
+Route::get('/show-comments/{markerId}', 'CommentController@showComments');
+
+Route::post('/addComments','CommentController@addComments')->middleware('auth:api');
+Route::post('/add-favorite/{markerId}','FavoriteController@addFavorite')->middleware('auth:api');
+Route::post('/is-favorited/{markerId}','FavoriteController@isFavorited')->middleware('auth:api');

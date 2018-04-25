@@ -14,10 +14,19 @@ use App\Comment;
 class CommentRepository
 {
     public function show($markerId){
-        return Comment::where('marker_id',$markerId);
+        return Comment::where('marker_id',$markerId)->with('User')->get();
     }
 
-    public function create($attribute){
-        Comment::create($attribute);
+    public function create(array $attributes){
+        return Comment::create($attributes);
+    }
+
+
+    public function delete($markerId){
+
+    }
+
+    public function update($attribute,$markerId){
+
     }
 }

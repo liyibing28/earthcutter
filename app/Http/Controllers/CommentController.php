@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repository\CommentRepository;
 use Illuminate\Http\Request;
+use Auth;
 
 class CommentController extends Controller
 {
@@ -19,7 +20,27 @@ class CommentController extends Controller
     }
 
 
-    public function show($markerId){
-        $this->commentRepositry->show($markerId);
+    public function showComments($markerId){
+        $comments = $this->commentRepositry->show($markerId);
+
+        return response()->json($comments);
+    }
+
+    public function addComments(){
+
+        $comment = $this->commentRepositry->create([
+            'user_id' =>  auth()->guard('api')->user()->id,
+            'marker_id' => \request('marker_id'),
+            'body' => \request('body'),
+        ]);
+
+        if($comment)
+        {
+            return response()->json('success!');
+        }
+        else{
+            return response()->json('failed!!');
+        }
+
     }
 }

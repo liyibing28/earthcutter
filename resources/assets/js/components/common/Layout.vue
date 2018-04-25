@@ -56,7 +56,7 @@
                 },{
                     title: '我的',
                     path: '/profile',
-                    icon: 'me',
+                    icon: 'people',
                 }],
                 open: false,
                 docked: false,
