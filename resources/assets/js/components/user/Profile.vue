@@ -1,28 +1,55 @@
 <template>
     <layout title="我的主页" :has_menu="true">
-        <mu-list>
-            <mu-list-item title="头像">
+            <div class="content">
+                <mu-card class="card">
+                    <mu-list>
+                        <mu-list-item title="头像">
+                            <vue-core-image-upload
+                                    :crop="false"
+                                    @imageuploaded="imageuploaded"
+                                    :max-file-size="5242880"
+                                    inputOfFile="img"
+                                    url="/api/avatar"
+                                    text="修改"
+                                    :headers="headers"
+                                    slot="right">
+                            </vue-core-image-upload>
+                        </mu-list-item>
 
-                <vue-core-image-upload
-                        :crop="false"
-                        @imageuploaded="imageuploaded"
-                        :max-file-size="5242880"
-                        inputOfFile="img"
-                        url="/api/avatar"
-                        text="修改"
-                        :headers="headers"
-                        slot="right">
-                </vue-core-image-upload>
-            </mu-list-item>
 
-            <mu-list-item :title="user.name">
-                <mu-icon value="people" slot="left" color="pinkA200"/>
-            </mu-list-item>
-            <mu-list-item :title="user.email">
-                <mu-icon value="email" slot="left" color="pinkA200"/>
-            </mu-list-item>
-            <mu-raised-button @click="editProfile" primary>修改</mu-raised-button>
-        </mu-list>
+                        <mu-list-item title="用户名" to="/">
+                            <mu-icon slot="left" value="star" />
+                            <p slot="after">{{user.name}}</p>
+                            <mu-icon slot="after" value="chevron_right" />
+                        </mu-list-item>
+
+                        <mu-list-item title="注册时间">
+                            <mu-icon slot="left" value="access_time" />
+                            <p slot="after">2017-10-9</p>
+                        </mu-list-item>
+                    </mu-list>
+                </mu-card>
+
+                <mu-card class="card">
+                    <mu-list-item title="邮箱" to="/edit-profile">
+                        <mu-icon slot="left" value="email" />
+                        <p slot="after">{{user.email}}</p>
+                        <mu-icon slot="after" value="chevron_right" />
+                    </mu-list-item>
+                    <mu-list-item title="密码" @click="alterInfo('password')">
+                        <mu-icon slot="left" value="lock" />
+                        <p slot="after">修改</p>
+                        <mu-icon slot="after" value="chevron_right" />
+                    </mu-list-item>
+                </mu-card>
+
+                <mu-card class="card">
+                    <mu-raised-button label="退出登录" labelClass="exit-btn" @click="logout" fullWidth color="#ff8a80" />
+                </mu-card>
+            </div>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
     </layout>
 </template>
 
@@ -57,12 +84,35 @@
             },
             imageuploaded(response) {
                 console.log(response);
+            },
+            alterInfo(infoName = 'email') {
+                this.$router.push({name:'edit-profile'});
+            },
+            logout(){
+
             }
         }
 
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    .content {
+        width: 100%;
+        height: calc(100vh - 96px);
+        position: relative;
+        //z-index: -1;
+    }
 
+    .card {
+        width: 95%;
+        margin: 10px auto;
+        &:first-child,
+        &:last-child {
+            margin-top: 20px;
+        }
+    }
+    .exit-btn {
+        font-size: 14px;
+    }
 </style>

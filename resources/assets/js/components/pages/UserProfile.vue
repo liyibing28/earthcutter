@@ -16,7 +16,6 @@
 
 <script>
     import Layout from "../common/Layout";
-
     export default {
         components: {Layout},
         name: "guest-profile",

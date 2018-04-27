@@ -50,6 +50,13 @@ let routes = [
         path: '/profile',
         name: 'profile',
         component: require('./components/user/Profile'),
+        children :[
+            {
+                path: 'email',
+                name: 'edit-email',
+                component: require('./components/user/EditProfile')
+            }
+        ],
         meta: { reqiureAuth: true }
 
     },
