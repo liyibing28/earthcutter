@@ -54,8 +54,8 @@ let routes = [
 
     },
     {
-        path: '/guest-profile',
-        name: 'guest-profile', //指定路由
+        path: '/user-profile/:id',
+        name: 'user-profile', //指定路由
         component: require('./components/pages/UserProfile'),
         meta: {},
     },

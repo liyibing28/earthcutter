@@ -1,5 +1,8 @@
 <template>
     <layout title="详细资料" :has_menu="false">
+
+
+
         <div>
             <mu-raised-button label="发送私信" @click="open" primary/>
             <mu-dialog :open="dialog" title="Dialog" @close="close">
@@ -23,9 +26,16 @@
                 body : '',
                 user_id: '',
                 status : false,
+                user :{},
             }
         },
-        props:['user'],
+        mounted() {
+            axios.get('/api/user/' + this.$route.params.id).then(response => {
+                this.user = response.data;
+                console.log(this.user);
+            });
+        },
+
         methods: {
             open () {
                 this.dialog = true

@@ -4,14 +4,20 @@
             <el-amap class="amap-box" ref="map"  vid="amap" :amap-manager="amapManager" :plugin="plugin" :center="center" :events="events">
                 <!--//添加标记-->
                 <el-amap-marker vid="add-marker" :position="marker.position" :visible="marker.visible" :draggable="marker.draggable" ></el-amap-marker>
-                <el-amap-info-window vid="add-marker-info-window" :position="marker.position" :visible="markerWindow.visible" :autoMove="true">
-                    <p>address: {{ marker.address }}</p>
-                    <mu-raised-button label="下面弹出" @click="open('bottom')"/>
+                <el-amap-info-window vid="add-marker-info-window" :position="marker.position" :visible="markerWindow.visible" :autoMove="true" :template="template">
+                    <div>
+                        <p>address: {{ marker.address }}</p>
+                        <mu-raised-button label="下面弹出" @click="open('bottom')"/>
+                    </div>
                 </el-amap-info-window>
 
                 <!--//展示已存在标记-->
-                <el-amap-marker v-for="marker11 in markers" :key="marker11.id" :position="marker11.position" ></el-amap-marker>
-                <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :content="window.content"></el-amap-info-window>
+                <el-amap-marker v-for="marker in markers" :key="marker.id" :position="marker.position" :events="marker.events" ></el-amap-marker>
+                <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :template="window.template">
+                    <div>
+                        <router-link :to="{ name: 'mark-detail', params:{id : window.id }}">{{window.title}}</router-link>
+                    </div>
+                </el-amap-info-window>
 
             </el-amap>
 
@@ -41,8 +47,10 @@
     import { AMapManager } from 'vue-amap';
     import VueAMap from "vue-amap";
     import Layout from "../common/Layout";
+    import LoginForm from "../login/LoginForm"
     export default {
         components: {
+            LoginForm,
             Layout
         },
         data() {
@@ -129,35 +137,6 @@
                             west : this.bounds.southwest.lng,
                         };
                         console.log(formData);
-                        axios.get('/api/show-mark',formData).then(response => {
-                            console.log(response.data);
-                            this.points = response.data;
-                            console.log(this.points.length);
-                            for(let i=0; i < this.points.length; i++){
-                                let marker = {
-                                    position: [this.points[i].longitude,this.points[i].latitude],
-                                    events: {
-                                        click() {
-                                            this.windows.forEach(window => {
-                                                window.visible = false;
-                                            });
-
-                                            this.window = this.windows[i];
-                                            self.$nextTick(() => {
-                                                this.window.visible = true;
-                                            });
-                                        }
-                                    }
-                                };
-                                this.markers.push(marker);
-                                this.windows.push({
-                                    position: [this.points[i].longitude,this.points[i].latitude],
-                                    content: `<div class="prompt">${ i }</div>`,
-                                    visible: false
-                                });
-                            }
-                        });
-
                     }
                 },
                 list: ['营地', '路况', '风景', '天气'],
@@ -170,9 +149,49 @@
                 },
                 //底部弹出组件
                 bottomPopup: false,
+                template : ``,
             }
         },
         mounted(){
+            let markers = [];
+            let windows = [];
+            let self = this;
+            axios.get('/api/show-mark').then(response =>{
+                length = response.data.length;
+                this.points = response.data;
+                console.log(length);
+                for (let i = 0 ; i < length ; i ++) {
+                    markers.push({
+                        position: [this.points[i].longitude, this.points[i].latitude],
+                        events: {
+                            click() {
+                                self.windows.forEach(window => {
+                                    window.visible = false;
+                                });
+
+                                self.window = self.windows[i];
+                                self.$nextTick(() => {
+                                    self.window.visible = true;
+                                });
+                            }
+                        }
+                    });
+
+                    windows.push({
+                        title : this.points[i].title,
+                        id    : this.points[i].id,
+                        position: [this.points[i].longitude, this.points[i].latitude],
+                        template: '',
+                        visible: false
+                    });
+                }
+
+                this.markers = markers;
+                this.windows = windows;
+
+                console.log(this.windows);
+            })
+
         },
         methods:{
             addMark(){

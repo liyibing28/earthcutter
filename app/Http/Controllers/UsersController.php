@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Repository\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
+    protected $userRepository;
+
+    /**
+     * UsersController constructor.
+     * @param $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+
     public function changAvatar(Request $request){
         $file = $request->file('img');
         $user = auth()->guard('api')->user();
@@ -28,5 +41,12 @@ class UsersController extends Controller
         return response()->json([
             'filename' => $filename,
             'path' => auth()->guard('api')->user()->avatar]);
+    }
+
+    public function getUserById($userId)
+    {
+        $user = $this->userRepository->findUserById($userId);
+
+        return response()->json($user);
     }
 }

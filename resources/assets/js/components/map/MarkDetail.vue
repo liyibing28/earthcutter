@@ -2,14 +2,23 @@
     <layout title="详情" :has_menu="false">
         <div class="">
             <mu-sub-header>{{marker.title}}</mu-sub-header>
+            <mu-sub-header> 创建者：<router-link :to="{ name: 'user-profile', params:{id : user.id }}">{{user.name}}</router-link></mu-sub-header>
+            <mu-sub-header> 创建时间：{{marker.created_at}} </mu-sub-header>
+
+            <mu-divider></mu-divider>
             <mu-content-block>
                 <p>{{marker.body}}</p>
             </mu-content-block>
+            <div class="text-center">
+                <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
+                <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite"></mu-raised-button>
 
-            <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
-            <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite"></mu-raised-button>
+                <mu-raised-button label="评论" @click="open" primary/>
+            </div>
 
-            <mu-raised-button label="评论" @click="open" primary/>
+
+
+
             <mu-dialog :open="dialog" title="评论" @close="close">
                 <div v-for="comment in comments" :key="comment.id">
                     <mu-sub-header>{{comment.user.name}}</mu-sub-header>
@@ -19,7 +28,7 @@
                 </div>
 
                 <div>
-                    <mu-text-field v-model="body" hintText="多行文本输入，默认 3行，最大6行" name="body" multiLine :rows="3" :rowsMax="6" :fullWidth="true"/>
+                    <mu-text-field v-model="body" hintText="多行文本输入，默认 3行，最大6行" name="body" multiLine :rows="1" :rowsMax="2" :fullWidth="true"/>
                     <mu-flat-button slot="actions" @click="close" primary label="取消"/>
                     <mu-flat-button slot="actions" primary @click="sendMessage" label="发送"/>
                 </div>
@@ -47,11 +56,13 @@
                 body : '',
                 comments: [],
                 is_favorite : false,
+                user:{},
             }
         },
         mounted() {
             axios.get('/api/show-mark/' + this.$route.params.id).then(response => {
             this.marker = response.data[0];
+            this.user = this.marker.user;
             console.log(this.marker);
             });
 

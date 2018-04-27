@@ -52037,8 +52037,8 @@ var routes = [{
     meta: { reqiureAuth: true }
 
 }, {
-    path: '/guest-profile',
-    name: 'guest-profile', //指定路由
+    path: '/user-profile/:id',
+    name: 'user-profile', //指定路由
     component: __webpack_require__(127),
     meta: {}
 }, {
@@ -52317,6 +52317,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_amap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue_amap__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Layout__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__common_Layout__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_LoginForm__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_LoginForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__login_LoginForm__);
 //
 //
 //
@@ -52356,12 +52358,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
+        LoginForm: __WEBPACK_IMPORTED_MODULE_2__login_LoginForm___default.a,
         Layout: __WEBPACK_IMPORTED_MODULE_1__common_Layout___default.a
     },
     data: function data() {
@@ -52446,41 +52456,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         west: _this.bounds.southwest.lng
                     };
                     console.log(formData);
-                    axios.get('/api/show-mark', formData).then(function (response) {
-                        console.log(response.data);
-                        _this.points = response.data;
-                        console.log(_this.points.length);
-
-                        var _loop = function _loop(i) {
-                            var marker = {
-                                position: [_this.points[i].longitude, _this.points[i].latitude],
-                                events: {
-                                    click: function click() {
-                                        var _this2 = this;
-
-                                        this.windows.forEach(function (window) {
-                                            window.visible = false;
-                                        });
-
-                                        this.window = this.windows[i];
-                                        self.$nextTick(function () {
-                                            _this2.window.visible = true;
-                                        });
-                                    }
-                                }
-                            };
-                            _this.markers.push(marker);
-                            _this.windows.push({
-                                position: [_this.points[i].longitude, _this.points[i].latitude],
-                                content: "<div class=\"prompt\">" + i + "</div>",
-                                visible: false
-                            });
-                        };
-
-                        for (var i = 0; i < _this.points.length; i++) {
-                            _loop(i);
-                        }
-                    });
                 }
             },
             list: ['营地', '路况', '风景', '天气'],
@@ -52492,10 +52467,57 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 isHidden: false
             },
             //底部弹出组件
-            bottomPopup: false
+            bottomPopup: false,
+            template: ""
         };
     },
-    mounted: function mounted() {},
+    mounted: function mounted() {
+        var _this2 = this;
+
+        var markers = [];
+        var windows = [];
+        var self = this;
+        axios.get('/api/show-mark').then(function (response) {
+            length = response.data.length;
+            _this2.points = response.data;
+            console.log(length);
+
+            var _loop = function _loop(i) {
+                markers.push({
+                    position: [_this2.points[i].longitude, _this2.points[i].latitude],
+                    events: {
+                        click: function click() {
+                            self.windows.forEach(function (window) {
+                                window.visible = false;
+                            });
+
+                            self.window = self.windows[i];
+                            self.$nextTick(function () {
+                                self.window.visible = true;
+                            });
+                        }
+                    }
+                });
+
+                windows.push({
+                    title: _this2.points[i].title,
+                    id: _this2.points[i].id,
+                    position: [_this2.points[i].longitude, _this2.points[i].latitude],
+                    template: '',
+                    visible: false
+                });
+            };
+
+            for (var i = 0; i < length; i++) {
+                _loop(i);
+            }
+
+            _this2.markers = markers;
+            _this2.windows = windows;
+
+            console.log(_this2.windows);
+        });
+    },
 
     methods: {
         addMark: function addMark() {
@@ -52843,39 +52865,68 @@ var render = function() {
                   vid: "add-marker-info-window",
                   position: _vm.marker.position,
                   visible: _vm.markerWindow.visible,
-                  autoMove: true
+                  autoMove: true,
+                  template: _vm.template
                 }
               },
               [
-                _c("p", [_vm._v("address: " + _vm._s(_vm.marker.address))]),
-                _vm._v(" "),
-                _c("mu-raised-button", {
-                  attrs: { label: "下面弹出" },
-                  on: {
-                    click: function($event) {
-                      _vm.open("bottom")
-                    }
-                  }
-                })
-              ],
-              1
+                _c(
+                  "div",
+                  [
+                    _c("p", [_vm._v("address: " + _vm._s(_vm.marker.address))]),
+                    _vm._v(" "),
+                    _c("mu-raised-button", {
+                      attrs: { label: "下面弹出" },
+                      on: {
+                        click: function($event) {
+                          _vm.open("bottom")
+                        }
+                      }
+                    })
+                  ],
+                  1
+                )
+              ]
             ),
             _vm._v(" "),
-            _vm._l(_vm.markers, function(marker11) {
+            _vm._l(_vm.markers, function(marker) {
               return _c("el-amap-marker", {
-                key: marker11.id,
-                attrs: { position: marker11.position }
+                key: marker.id,
+                attrs: { position: marker.position, events: marker.events }
               })
             }),
             _vm._v(" "),
             _vm.window
-              ? _c("el-amap-info-window", {
-                  attrs: {
-                    position: _vm.window.position,
-                    visible: _vm.window.visible,
-                    content: _vm.window.content
-                  }
-                })
+              ? _c(
+                  "el-amap-info-window",
+                  {
+                    attrs: {
+                      position: _vm.window.position,
+                      visible: _vm.window.visible,
+                      template: _vm.window.template
+                    }
+                  },
+                  [
+                    _c(
+                      "div",
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            attrs: {
+                              to: {
+                                name: "mark-detail",
+                                params: { id: _vm.window.id }
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.window.title))]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                )
               : _vm._e()
           ],
           2
@@ -56924,7 +56975,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -56950,6 +57001,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 
@@ -56961,11 +57015,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             dialog: false,
             body: '',
             user_id: '',
-            status: false
+            status: false,
+            user: {}
         };
     },
+    mounted: function mounted() {
+        var _this = this;
 
-    props: ['user'],
+        axios.get('/api/user/' + this.$route.params.id).then(function (response) {
+            _this.user = response.data;
+            console.log(_this.user);
+        });
+    },
+
+
     methods: {
         open: function open() {
             this.dialog = true;
@@ -56974,7 +57037,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.dialog = false;
         },
         sendMessage: function sendMessage() {
-            var _this = this;
+            var _this2 = this;
 
             var formData = {
                 to_user_id: 37,
@@ -56982,8 +57045,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
 
             axios.post('/api/sendMessage', formData).then(function (response) {
-                _this.status = response.data.status;
-                _this.close();
+                _this2.status = response.data.status;
+                _this2.close();
             });
         }
     }
@@ -57991,7 +58054,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -58006,6 +58069,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Comment__ = __webpack_require__(159);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Comment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__common_Comment__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -58054,7 +58126,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             markerId: '',
             body: '',
             comments: [],
-            is_favorite: false
+            is_favorite: false,
+            user: {}
         };
     },
     mounted: function mounted() {
@@ -58062,6 +58135,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         axios.get('/api/show-mark/' + this.$route.params.id).then(function (response) {
             _this.marker = response.data[0];
+            _this.user = _this.marker.user;
             console.log(_this.marker);
         });
 
@@ -58349,26 +58423,56 @@ var render = function() {
       [
         _c("mu-sub-header", [_vm._v(_vm._s(_vm.marker.title))]),
         _vm._v(" "),
+        _c(
+          "mu-sub-header",
+          [
+            _vm._v(" 创建者："),
+            _c(
+              "router-link",
+              {
+                attrs: {
+                  to: { name: "user-profile", params: { id: _vm.user.id } }
+                }
+              },
+              [_vm._v(_vm._s(_vm.user.name))]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("mu-sub-header", [
+          _vm._v(" 创建时间：" + _vm._s(_vm.marker.created_at) + " ")
+        ]),
+        _vm._v(" "),
+        _c("mu-divider"),
+        _vm._v(" "),
         _c("mu-content-block", [_c("p", [_vm._v(_vm._s(_vm.marker.body))])]),
         _vm._v(" "),
-        !_vm.is_favorite
-          ? _c("mu-raised-button", {
-              attrs: { label: "收藏", primary: "" },
-              on: { click: _vm.addFavorite }
+        _c(
+          "div",
+          { staticClass: "text-center" },
+          [
+            !_vm.is_favorite
+              ? _c("mu-raised-button", {
+                  attrs: { label: "收藏", primary: "" },
+                  on: { click: _vm.addFavorite }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.is_favorite
+              ? _c("mu-raised-button", {
+                  attrs: { label: "取消收藏" },
+                  on: { click: _vm.addFavorite }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("mu-raised-button", {
+              attrs: { label: "评论", primary: "" },
+              on: { click: _vm.open }
             })
-          : _vm._e(),
-        _vm._v(" "),
-        _vm.is_favorite
-          ? _c("mu-raised-button", {
-              attrs: { label: "取消收藏" },
-              on: { click: _vm.addFavorite }
-            })
-          : _vm._e(),
-        _vm._v(" "),
-        _c("mu-raised-button", {
-          attrs: { label: "评论", primary: "" },
-          on: { click: _vm.open }
-        }),
+          ],
+          1
+        ),
         _vm._v(" "),
         _c(
           "mu-dialog",
@@ -58400,8 +58504,8 @@ var render = function() {
                     hintText: "多行文本输入，默认 3行，最大6行",
                     name: "body",
                     multiLine: "",
-                    rows: 3,
-                    rowsMax: 6,
+                    rows: 1,
+                    rowsMax: 2,
                     fullWidth: true
                   },
                   model: {
