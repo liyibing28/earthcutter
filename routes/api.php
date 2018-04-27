@@ -21,7 +21,9 @@ Route::get('/posts', 'PostController@index');
 Route::get('/posts/{post}', 'PostController@show');
 
 Route::post('/register', 'Auth\RegisterController@register');
-Route::post('/login', 'Auth\LoginController@login');
+
+Route::post('/login', 'Auth\LoginController@login')->name('login');
+
 Route::post('/logout', 'Auth\LoginController@logout');
 Route::post('/token/refresh', 'Auth\LoginController@refresh');
 Route::post('/add-mark', 'MapController@create');
@@ -44,5 +46,5 @@ Route::post('/show-favorite','FavoriteController@showFavorite')->middleware('aut
 Route::post('/my-markers','MapController@showMyMarkers')->middleware('auth:api');
 Route::post('/my-comments','CommentController@showMyComments')->middleware('auth:api');
 
-Route::post('/avatar','UsersController@changAvatar');
+Route::post('/avatar','UsersController@changAvatar')->middleware('auth:api');
 

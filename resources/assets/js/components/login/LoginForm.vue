@@ -43,7 +43,7 @@
                     password: this.password
                 };
                 this.$store.dispatch('loginRequest',formData).then(response => {
-                    //this.$router.push({name: 'profile'});
+                    this.$router.push({name: 'map'});
                 }).catch(error => {
                     if(error.response.status === 421){
                         this.bag.add('password','邮箱和密码不符','auth');

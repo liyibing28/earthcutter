@@ -7,8 +7,10 @@
                         :crop="false"
                         @imageuploaded="imageuploaded"
                         :max-file-size="5242880"
+                        inputOfFile="img"
                         url="/api/avatar"
                         text="修改"
+                        :headers="headers"
                         slot="right">
                 </vue-core-image-upload>
             </mu-list-item>
@@ -27,6 +29,7 @@
 <script>
     import Layout from "../common/Layout";
     import {mapState} from "vuex";
+    import jwtToken from './../../helpers/jwt'
     import VueCoreImageUpload from 'vue-core-image-upload'
     export default {
         components: {
@@ -37,6 +40,7 @@
         data(){
             return{
                 src: 'http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png',
+                headers: {Authorization : 'Bearer ' + jwtToken.getToken()},
             }
         },
         created() {
@@ -51,10 +55,8 @@
             editProfile(){
                 this.$router.push({name:'edit-profile'});
             },
-            imageuploaded(res) {
-                if (res.errcode == 0) {
-                    this.src = res.data.src;
-                }
+            imageuploaded(response) {
+                console.log(response);
             }
         }
 

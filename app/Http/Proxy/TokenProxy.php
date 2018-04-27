@@ -46,7 +46,7 @@ class TokenProxy
 
     public function logout()
     {
-        $user = auth()->guard('api')->user();//从token获取到user
+        $user = auth()->guard('api')->user();  //从token获取到user
 
         if(is_null($user)){
             app('cookie')->queue(app('cookie')->forget('refreshToken'));

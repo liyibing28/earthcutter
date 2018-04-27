@@ -10,6 +10,8 @@ class MapController extends Controller
 {
     protected $mapRepository;
 
+    protected $user;
+
     /**
      * MapController constructor.
      * @param $mapRepository
@@ -17,6 +19,7 @@ class MapController extends Controller
     public function __construct(MapRepository $mapRepository)
     {
         $this->mapRepository = $mapRepository;
+        $this->user = auth()->guard('api')->user();
     }
 
 
@@ -35,7 +38,7 @@ class MapController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'add marker success',
+            'message' => $this->user,
         ]);
 
 
@@ -66,4 +69,6 @@ class MapController extends Controller
         //$data = null;
         return response()->json($data);
     }
+
+
 }

@@ -3,19 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Queue\RedisQueue;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
-    public function changAvatar(){
-        $file = \request('files');
-        $filename = md5(time().auth()->guard('api')->user()->id).'.'.$file->getClientOriginalExtension();
-        $file->move(public_path('avatars'),$filename);
+    public function changAvatar(Request $request){
+        $file = $request->file('img');
+        $user = auth()->guard('api')->user();
 
-        auth()->guard('api')->user()->avatar = asset(public_path('avatars/'.$filename));
+        //$filename = md5(time().$user->id).'.'.$file->getClientOriginalExtension();
 
-        auth()->guard('api')->user()->save;
+        $filename = Storage::disk('upyun')->put('/avatars',$file);
 
-        return ['user' => auth()->guard('api')->user()->avatar];
+        //$file->move(public_path('avatars'),$filename);
+
+        $user->avatar = 'http://'.config('filesystems.disks.upyun.domain').'/'.$filename;
+
+        $user->save;
+
+        if(is_null($user)){
+            return response()->json('user is null');
+        }
+
+        return response()->json([
+            'filename' => $filename,
+            'path' => auth()->guard('api')->user()->avatar]);
     }
 }

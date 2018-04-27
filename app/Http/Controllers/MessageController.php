@@ -65,4 +65,6 @@ class MessageController extends Controller
 
         return response()->json($messages);
     }
+
+
 }
