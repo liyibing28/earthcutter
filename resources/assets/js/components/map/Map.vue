@@ -7,7 +7,7 @@
                 <el-amap-info-window vid="add-marker-info-window" :position="marker.position" :visible="markerWindow.visible" :autoMove="true" :template="template">
                     <div>
                         <p>address: {{ marker.address }}</p>
-                        <mu-raised-button label="下面弹出" @click="open('bottom')"/>
+                        <mu-raised-button label="添加 marker" @click="open('bottom')"/>
                     </div>
                 </el-amap-info-window>
 

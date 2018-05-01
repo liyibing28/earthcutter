@@ -45,7 +45,11 @@ Route::post('/is-favorited/{markerId}','FavoriteController@isFavorited')->middle
 Route::post('/show-favorite','FavoriteController@showFavorite')->middleware('auth:api');
 Route::post('/my-markers','MapController@showMyMarkers')->middleware('auth:api');
 Route::post('/my-comments','CommentController@showMyComments')->middleware('auth:api');
-Route::post('/avatar','UsersController@changAvatar')->middleware('auth:api');
+Route::post('/avatar','UsersController@changAvatar');
 
 Route::get('/user/{userId}','UsersController@getUserById');
+Route::get('/email/verify/{token}',[
+    'as' => 'email.verify',
+    'uses' => 'EmailController@registerVerify'
+]);
 

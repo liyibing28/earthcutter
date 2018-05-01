@@ -34,12 +34,6 @@ let routes = [
         meta: { requireGuest: true },
     },
     {
-        path: '/confirm',
-        name: 'confirm', //指定路由
-        component: require('./components/pages/Email'),
-        meta: {},
-    },
-    {
         path: '/me',
         name: 'me',
         component: require('./components/common/Me'),

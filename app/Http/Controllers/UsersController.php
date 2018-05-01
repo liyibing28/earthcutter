@@ -1,6 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+//require_once('/vendor/autoload.php');
+
+use Upyun\Upyun;
+use Upyun\Config;
+
 
 use App\Repository\UserRepository;
 use Illuminate\Http\Request;
@@ -21,26 +26,46 @@ class UsersController extends Controller
 
 
     public function changAvatar(Request $request){
+        // 创建实例
+        //$bucketConfig = new Config('earthcutter-demo', 'earthcutter', 'earthcutter');
+        //$client = new Upyun($bucketConfig);
+
+
         $file = $request->file('img');
+        //return time();
+
         $user = auth()->guard('api')->user();
+
+
 
         //$filename = md5(time().$user->id).'.'.$file->getClientOriginalExtension();
 
+        //$res = $client->write('/avatars/'.$filename, $file);
+
+        //return $res;
+
         $filename = Storage::disk('upyun')->put('/avatars',$file);
 
-        //$file->move(public_path('avatars'),$filename);
+        //if(is_null($user)){
+        //    return response()->json('user is null');
+        //}
+
+
+
+        ///$file->move(public_path('avatars'),$filename);
 
         $user->avatar = 'http://'.config('filesystems.disks.upyun.domain').'/'.$filename;
 
-        $user->save;
+        //$user->avatar = asset(public_path('/avatars/').$filename);
 
-        if(is_null($user)){
-            return response()->json('user is null');
-        }
+        $user->save;
 
         return response()->json([
             'filename' => $filename,
-            'path' => auth()->guard('api')->user()->avatar]);
+            'path' => auth()->guard('api')->user()->avatar
+        ]);
+
+
     }
 
     public function getUserById($userId)

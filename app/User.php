@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','avatar'
+        'name', 'email', 'password','avatar','confirmation_token'
     ];
 
     /**
@@ -42,5 +42,9 @@ class User extends Authenticatable
 
     public function messages(){
         return $this->hasMany(Message::class,'to_user_id');
+    }
+
+    public function hasMarkers(){
+        return $this->hasMany(Map::class,'user_id');
     }
 }

@@ -61,7 +61,7 @@ class MessageController extends Controller
     public function show($user_id){
         $authId = auth()->guard('api')->user()->id;
 
-        $messages = Message::where([['user',$authId],['friend',$user_id]])->get();
+        $messages = Message::where([['user',$authId],['friend',$user_id]])->latest()->get();
 
         return response()->json($messages);
     }

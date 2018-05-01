@@ -15,7 +15,7 @@ class UserRepository
 {
     public function findUserById($userId)
     {
-        return User::find($userId);
+        return User::find($userId)->with('hasMarkers')->get();
         //return User::where('id',$userId)->get();
     }
 }

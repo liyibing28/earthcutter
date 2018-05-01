@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'PRC',
 
     /*
     |--------------------------------------------------------------------------
@@ -152,6 +152,7 @@ return [
          */
 
         JellyBool\Flysystem\Upyun\UpyunServiceProvider::class,
+        Naux\Mail\SendCloudServiceProvider::class, //sendcloud邮件发送服务
 
         /*
          * Application Service Providers...

@@ -1,26 +1,17 @@
 <template>
-    <form method="POST" @submit.prevent="login">
-
-        <mu-flexbox orient="vertical" justify="center">
-            <mu-flexbox-item>
-                <mu-text-field
-                        v-model="email" label="邮箱" name="email" hintText="请输入邮箱" type="email"
-                        v-validate="{ required: true, email: true }"/><br/>
-            </mu-flexbox-item>
-
-            <mu-flexbox-item>
-                <mu-text-field
-                        v-validate="{ required: true, min:6 }"
-                        v-model="password" label="密码" name="password" hintText="请输入密码" type="password"/><br/>
-            </mu-flexbox-item>
-
-
-            <mu-raised-button label="登录" type="submit" class="demo-raised-button" primary/>
-
-        </mu-flexbox>
-
-
-    </form>
+        <ul class="form-list">
+            <li>
+                <mu-text-field v-model="email" label="邮箱" labelFloat />
+            </li>
+            <li>
+                <mu-text-field v-model="password" type="password" label="密码" labelFloat />
+            </li>
+            <li>
+                <router-link to="/register" tag="a" class="option">注册账号</router-link>
+                <router-link to="" tag="a" class="option">忘记密码</router-link>
+                <mu-raised-button label="登录" @click="login" primary/>
+            </li>
+        </ul>
 </template>
 
 <script>
@@ -57,6 +48,25 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    .form-list {
+        width: 80%;
+        margin: 0 auto;
+    li {
+        display: block;
+    &:last-child {
+         float: right;
+         padding-top: 10px;
+    .option {
+        margin-right: 20px;
+        font-size: 14px;
+        //color: $color-theme;
+    }
+    &::after {
+         content: '';
+         clear: both;
+     }
+    }
+    }
+    }
 </style>

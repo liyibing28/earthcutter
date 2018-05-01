@@ -1,0 +1,83 @@
+@import './variables';
+@import './mixin';
+body,
+html {
+  line-height: 1;
+  font-family: 'Roboto', sans-serif, 'PingFang SC', 'STHeitiSC-Light',
+  'Helvetica-Light', arial, sans-serif, 'Droid Sans Fallback';
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  background: $color-background;
+  color: $color-text;
+  overflow: hidden;
+}
+.popup-top {
+  width: 100%;
+  opacity: 0.8;
+  height: 48px;
+  line-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mu-appbar,
+.mu-step-label.active .mu-step-label-circle,
+.mu-raised-button-primary,
+.mu-text-field-focus-line {
+  background-color: $color-theme !important;
+}
+.mu-text-field-label {
+  font-size: 18px !important;
+}
+// List_item
+.mu-item {
+  padding: 2px 16px !important;
+  align-items: center !important;
+}
+.mu-item-left {
+  position: static !important;
+}
+.mu-card-media-title {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+.mu-flat-button.disabled {
+  color: rgba(0, 0, 0, 0.38) !important;
+}
+// Text-Field
+.mu-text-field {
+  width: 100% !important;
+}
+// Switch
+
+.mu-switch {
+  input[type='checkbox'] {
+    &:checked {
+      + .mu-switch-wrapper {
+        .mu-switch-track {
+          @include background-opacity($color-theme);
+        }
+        .mu-switch-thumb {
+          background-color: $color-theme !important;
+          color: $color-theme !important;
+        }
+      }
+    }
+  }
+}
+// Button
+.mu-flat-button-primary,
+.mu-text-field.focus-state,
+.mu-step-label.completed .mu-step-label-icon,
+.mu-step-label.active .mu-step-label-icon {
+  color: $color-theme !important;
+}
+.mu-flat-button {
+  min-width: 0 !important;
+  flex: 1;
+}
+.material-icons {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}

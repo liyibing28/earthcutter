@@ -1,5 +1,5 @@
 <template>
-    <layout title="我的主页" :has_menu="true">
+    <layout title="我的主页" :has_menu="false">
             <div class="content">
                 <mu-card class="card">
                     <mu-list>

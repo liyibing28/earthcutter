@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('avatar');                         //头像链接
-            $table->string('confirmation_token');             //激活邮箱token
+            $table->string('confirmation_token')->nullable();             //激活邮箱token
             $table->boolean('is_active')->default(false);     //是否激活邮箱
             $table->rememberToken();
             $table->timestamps();

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Naux\Mail\SendCloudTemplate;
+use Mail;
 
 class RegisterController extends Controller
 {
@@ -74,10 +76,32 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'confirmation_token' => str_random(40 ),
+            'avatar' => 'http://earthcutter-demo.test.upcdn.net/avatars/AzzL6s60YwWVHTCAWJUlzqR69kHD73oUlB9ifU6s.jpeg'
         ]);
+
+        $this->sendVerifyEmailTo($user);
+        return $user;
+
+    }
+
+    private function sendVerifyEmailTo($user)
+    {
+        // 模板变量
+        $data = [
+            'url' => route('email.verify',['token' => $user->confirmation_token]),
+            'name' => $user->name
+        ];
+        $template = new SendCloudTemplate('earthcutter_app_register', $data);
+
+        Mail::raw($template, function ($message) use ($user) {
+            $message->from('18081032600@163.com', 'earthcutter');
+
+            $message->to($user->email);
+        });
     }
 }
