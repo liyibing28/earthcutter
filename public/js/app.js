@@ -52277,6 +52277,10 @@ var routes = [{
     meta: { reqiureAuth: true }
 
 }, {
+    path: '/about',
+    name: 'about',
+    component: __webpack_require__(218)
+}, {
     path: '/profile',
     name: 'profile',
     component: __webpack_require__(105),
@@ -52520,7 +52524,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.search-box[data-v-587069c2] {\n  margin-top: 5px;\n  width: 80%;\n  left: 5px;\n}\n.page_wrap[data-v-587069c2] {\n  width: 100%;\n  height: 100%;\n  background: #f5f5f5;\n}\n.page_wrap .map_wrap[data-v-587069c2] {\n  width: 100%;\n  height: 700px;\n  border: #ccc solid 1px;\n}\n.map[data-v-587069c2] {\n  width: 100px;\n  height: 400px;\n}\n.demo-popup-bottom[data-v-587069c2] {\n  width: 100%;\n  max-width: 700px;\n}\n.amap-wrapper[data-v-587069c2] {\n  width: 100%;\n  height: 500px;\n}\n", ""]);
+exports.push([module.i, "\n.search-box[data-v-587069c2] {\n  margin-top: 5px;\n  width: 80%;\n  left: 5px;\n}\n.page_wrap[data-v-587069c2] {\n  width: 100%;\n  height: 100%;\n  background: #f5f5f5;\n}\n.page_wrap .map_wrap[data-v-587069c2] {\n  width: 100%;\n  height: 700px;\n  border: #ccc solid 1px;\n}\n.map[data-v-587069c2] {\n  width: 100px;\n  height: 400px;\n}\n.popup-bottom[data-v-587069c2] {\n  width: 100%;\n  max-width: 1000px;\n}\n.amap-wrapper[data-v-587069c2] {\n  width: 100%;\n  height: 500px;\n}\n.popup-content[data-v-587069c2] {\n  width: 280px;\n}\n", ""]);
 
 // exports
 
@@ -52570,6 +52574,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__common_Layout__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_LoginForm__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login_LoginForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__login_LoginForm__);
+//
+//
 //
 //
 //
@@ -52712,7 +52718,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             list: ['营地', '路况', '风景', '天气'],
             toggle: true,
             addMarkerInfo: {
-                markerType: 0,
+                markerType: '营地',
                 title: '',
                 body: '',
                 isHidden: false
@@ -52772,6 +52778,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         addMark: function addMark() {
+            var _this3 = this;
+
             var formData = {
                 markerType: this.addMarkerInfo.markerType,
                 title: this.addMarkerInfo.title,
@@ -52782,6 +52790,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
             axios.post('/api/add-mark', formData).then(function (response) {
                 console.log(response.data);
+                _this3.close('bottom');
             });
         },
 
@@ -53364,7 +53373,7 @@ var render = function() {
           {
             attrs: {
               position: "bottom",
-              popupClass: "demo-popup-bottom",
+              popupClass: "popup-bottom",
               open: _vm.bottomPopup
             },
             on: {
@@ -53392,76 +53401,83 @@ var render = function() {
             ),
             _vm._v(" "),
             _c(
-              "mu-content-block",
+              "div",
+              { staticClass: "popup-content" },
               [
                 _c(
-                  "mu-select-field",
-                  {
-                    attrs: {
-                      labelFocusClass: ["label-foucs"],
-                      label: "选择分享类型"
-                    },
-                    model: {
-                      value: _vm.addMarkerInfo.markerType,
-                      callback: function($$v) {
-                        _vm.$set(_vm.addMarkerInfo, "markerType", $$v)
+                  "mu-content-block",
+                  [
+                    _c(
+                      "mu-select-field",
+                      {
+                        attrs: {
+                          labelFocusClass: ["label-foucs"],
+                          label: "选择分享类型"
+                        },
+                        model: {
+                          value: _vm.addMarkerInfo.markerType,
+                          callback: function($$v) {
+                            _vm.$set(_vm.addMarkerInfo, "markerType", $$v)
+                          },
+                          expression: "addMarkerInfo.markerType"
+                        }
                       },
-                      expression: "addMarkerInfo.markerType"
-                    }
-                  },
-                  _vm._l(_vm.list, function(text, index) {
-                    return _c("mu-menu-item", {
-                      key: index,
-                      attrs: { value: index, title: text }
-                    })
-                  })
-                ),
-                _vm._v(" "),
-                _c("mu-text-field", {
-                  attrs: { label: "简介", hintText: "请输入一些简单介绍" },
-                  model: {
-                    value: _vm.addMarkerInfo.title,
-                    callback: function($$v) {
-                      _vm.$set(_vm.addMarkerInfo, "title", $$v)
-                    },
-                    expression: "addMarkerInfo.title"
-                  }
-                }),
-                _c("br"),
-                _vm._v(" "),
-                _c("mu-text-field", {
-                  attrs: {
-                    hintText: "请输入详细介绍",
-                    multiLine: "",
-                    rows: 3,
-                    rowsMax: 6
-                  },
-                  model: {
-                    value: _vm.addMarkerInfo.body,
-                    callback: function($$v) {
-                      _vm.$set(_vm.addMarkerInfo, "body", $$v)
-                    },
-                    expression: "addMarkerInfo.body"
-                  }
-                }),
-                _c("br"),
-                _vm._v(" "),
-                _c("mu-switch", {
-                  attrs: { label: "仅自己可见" },
-                  model: {
-                    value: _vm.addMarkerInfo.isHidden,
-                    callback: function($$v) {
-                      _vm.$set(_vm.addMarkerInfo, "isHidden", $$v)
-                    },
-                    expression: "addMarkerInfo.isHidden"
-                  }
-                }),
-                _c("br"),
-                _vm._v(" "),
-                _c(
-                  "mu-raised-button",
-                  { attrs: { primary: "" }, on: { click: _vm.addMark } },
-                  [_vm._v("创建")]
+                      _vm._l(_vm.list, function(text, index) {
+                        return _c("mu-menu-item", {
+                          key: index,
+                          attrs: { value: text, title: text }
+                        })
+                      })
+                    ),
+                    _vm._v(" "),
+                    _c("mu-text-field", {
+                      attrs: { label: "简介", hintText: "请输入一些简单介绍" },
+                      model: {
+                        value: _vm.addMarkerInfo.title,
+                        callback: function($$v) {
+                          _vm.$set(_vm.addMarkerInfo, "title", $$v)
+                        },
+                        expression: "addMarkerInfo.title"
+                      }
+                    }),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("mu-text-field", {
+                      attrs: {
+                        hintText: "请输入详细介绍",
+                        multiLine: "",
+                        rows: 3,
+                        rowsMax: 6
+                      },
+                      model: {
+                        value: _vm.addMarkerInfo.body,
+                        callback: function($$v) {
+                          _vm.$set(_vm.addMarkerInfo, "body", $$v)
+                        },
+                        expression: "addMarkerInfo.body"
+                      }
+                    }),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("mu-switch", {
+                      attrs: { label: "仅自己可见" },
+                      model: {
+                        value: _vm.addMarkerInfo.isHidden,
+                        callback: function($$v) {
+                          _vm.$set(_vm.addMarkerInfo, "isHidden", $$v)
+                        },
+                        expression: "addMarkerInfo.isHidden"
+                      }
+                    }),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c(
+                      "mu-raised-button",
+                      { attrs: { primary: "" }, on: { click: _vm.addMark } },
+                      [_vm._v("创建")]
+                    )
+                  ],
+                  1
                 )
               ],
               1
@@ -54634,7 +54650,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "mu-list-item",
-            { attrs: { title: "设置" } },
+            { attrs: { title: "设置", to: "/about" } },
             [
               _c("mu-icon", {
                 attrs: { slot: "left", value: "settings" },
@@ -57722,7 +57738,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             var formData = {
-                to_user_id: 37,
+                to_user_id: this.$route.params.id,
                 body: this.body
             };
 
@@ -58332,7 +58348,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -58381,7 +58397,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
     },
 
-    methods: {}
+    methods: {
+        deleteByUser: function deleteByUser() {}
+    }
 });
 
 /***/ }),
@@ -58408,7 +58426,10 @@ var render = function() {
               },
               [
                 _c("mu-avatar", {
-                  attrs: { slot: "leftAvatar", src: "/images/avatar1.jpg" },
+                  attrs: {
+                    slot: "leftAvatar",
+                    src: message[0].from_user.avatar
+                  },
                   slot: "leftAvatar"
                 }),
                 _vm._v(" "),
@@ -58440,7 +58461,10 @@ var render = function() {
                   [
                     _c("mu-menu-item", { attrs: { title: "回复" } }),
                     _vm._v(" "),
-                    _c("mu-menu-item", { attrs: { title: "删除" } })
+                    _c("mu-menu-item", {
+                      attrs: { title: "删除" },
+                      on: { event: _vm.deleteByUser }
+                    })
                   ],
                   1
                 )
@@ -58741,7 +58765,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -58756,6 +58780,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Comment__ = __webpack_require__(171);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Comment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__common_Comment__);
+//
+//
 //
 //
 //
@@ -59133,7 +59159,17 @@ var render = function() {
         _vm._v(" "),
         _c("mu-divider"),
         _vm._v(" "),
-        _c("mu-content-block", [_c("p", [_vm._v(_vm._s(_vm.marker.body))])]),
+        _c(
+          "mu-content-block",
+          [
+            _c("mu-sub-header", [
+              _vm._v(" 类型：" + _vm._s(_vm.marker.mark_type) + " ")
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v(_vm._s(_vm.marker.body))])
+          ],
+          1
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -59385,7 +59421,15 @@ var render = function() {
         [
           _c("mu-sub-header", [_vm._v(_vm._s(favorite.map.title))]),
           _vm._v(" "),
-          _c("mu-content-block", [_c("p", [_vm._v(_vm._s(favorite.map.body))])])
+          _c("mu-sub-header", [
+            _vm._v(" 创建者: " + _vm._s(favorite.user.name) + " ")
+          ]),
+          _vm._v(" "),
+          _c("mu-sub-header", [
+            _vm._v("创建时间: " + _vm._s(favorite.map.created_at))
+          ]),
+          _vm._v(" "),
+          _c("mu-divider")
         ],
         1
       )
@@ -67696,6 +67740,126 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(219)
+/* template */
+var __vue_template__ = __webpack_require__(220)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/pages/About.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ded17fca", Component.options)
+  } else {
+    hotAPI.reload("data-v-ded17fca", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 219 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: { Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
+    mounted: function mounted() {
+        console.log('Component mounted.');
+    }
+});
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "layout",
+    { attrs: { title: "关于", has_menu: false } },
+    [
+      _c("mu-sub-header", [_vm._v("earthcutter")]),
+      _vm._v(" "),
+      _c("mu-content-block", [
+        _vm._v("\n        杭州电子科技大学"),
+        _c("br"),
+        _vm._v("\n        计算机学院"),
+        _c("br"),
+        _vm._v("\n        14051123李宜柄的本科毕业设计"),
+        _c("br"),
+        _vm._v("\n        基于 laravel+vue+muse-ui 的移动端spa应用\n    ")
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ded17fca", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

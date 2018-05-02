@@ -21,24 +21,26 @@
 
             </el-amap>
 
-            <mu-popup position="bottom" popupClass="demo-popup-bottom" :open="bottomPopup" @close="close('bottom')">
+            <mu-popup position="bottom" popupClass="popup-bottom" :open="bottomPopup" @close="close('bottom')" >
                 <mu-appbar title="弹出">
                     <mu-flat-button slot="right" label="关闭" color="white" @click="close('bottom')"/>
                 </mu-appbar>
-                <mu-content-block>
-                    <mu-select-field v-model="addMarkerInfo.markerType" :labelFocusClass="['label-foucs']" label="选择分享类型">
-                        <mu-menu-item v-for="text,index in list" :key="index" :value="index" :title="text" />
-                    </mu-select-field>
-                    <mu-text-field v-model="addMarkerInfo.title" label="简介" hintText="请输入一些简单介绍"/><br/>
-                    <mu-text-field v-model="addMarkerInfo.body" hintText="请输入详细介绍" multiLine :rows="3" :rowsMax="6"/><br/>
-                    <mu-switch label="仅自己可见" v-model="addMarkerInfo.isHidden" /><br/>
+                <div class="popup-content">
+                    <mu-content-block >
+                        <mu-select-field v-model="addMarkerInfo.markerType" :labelFocusClass="['label-foucs']" label="选择分享类型">
+                            <mu-menu-item v-for="text,index in list" :key="index" :value="text" :title="text" />
+                        </mu-select-field>
+                        <mu-text-field v-model="addMarkerInfo.title" label="简介" hintText="请输入一些简单介绍"/><br/>
+                        <mu-text-field v-model="addMarkerInfo.body" hintText="请输入详细介绍" multiLine :rows="3" :rowsMax="6"/><br/>
+                        <mu-switch label="仅自己可见" v-model="addMarkerInfo.isHidden" /><br/>
 
-                    <mu-raised-button @click="addMark" primary>创建</mu-raised-button>
+                        <mu-raised-button @click="addMark" primary>创建</mu-raised-button>
 
-                </mu-content-block>
+                    </mu-content-block>
+                </div>
+
             </mu-popup>
         </div>
-
 
     </layout>
 </template>
@@ -142,7 +144,7 @@
                 list: ['营地', '路况', '风景', '天气'],
                 toggle: true,
                 addMarkerInfo: {
-                    markerType : 0,
+                    markerType : '营地',
                     title: '',
                     body: '',
                     isHidden: false,
@@ -205,6 +207,7 @@
                 };
                 axios.post('/api/add-mark',formData).then(response => {
                     console.log(response.data);
+                    this.close('bottom');
                 });
             },
 
@@ -243,14 +246,17 @@
         width: 100px;
         height: 400px;
     }
-    .demo-popup-bottom {
+    .popup-bottom {
         width: 100%;
-        max-width: 700px;
+        max-width: 1000px;
     }
 
     .amap-wrapper {
         width: 100%;
         height: 500px;
+    }
+    .popup-content{
+        width: 280px;
     }
 
 </style>

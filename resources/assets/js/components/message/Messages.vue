@@ -2,11 +2,11 @@
     <layout title="消息记录" :has_menu="true">
         <mu-list>
             <mu-list-item v-for="message in messages" :key="message[0].id" :title="message[0].from_user_name" >
-                <mu-avatar src="/images/avatar1.jpg" slot="leftAvatar"/>
+                <mu-avatar :src="message[0].from_user.avatar" slot="leftAvatar"/>
                 <router-link slot="describe" :to="{ name: 'message-detail', params:{id : message[0].from_user_id }}">{{message[0].body}}</router-link>
                 <mu-icon-menu slot="right" icon="more_vert" tooltip="操作">
                     <mu-menu-item title="回复" />
-                    <mu-menu-item title="删除" />
+                    <mu-menu-item title="删除" @event="deleteByUser"/>
                 </mu-icon-menu>
             </mu-list-item>
             <mu-divider inset/>
@@ -32,7 +32,9 @@
             });
         },
         methods:{
+            deleteByUser(){
 
+            }
         }
     }
 </script>

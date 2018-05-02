@@ -3,10 +3,12 @@
         <div class="">
             <mu-sub-header>{{marker.title}}</mu-sub-header>
             <mu-sub-header> 创建者：<router-link :to="{ name: 'user-profile', params:{id : user.id }}">{{user.name}}</router-link></mu-sub-header>
+
             <mu-sub-header> 创建时间：{{marker.created_at}} </mu-sub-header>
 
             <mu-divider></mu-divider>
             <mu-content-block>
+                <mu-sub-header> 类型：{{marker.mark_type}} </mu-sub-header>
                 <p>{{marker.body}}</p>
             </mu-content-block>
             <div class="text-center">

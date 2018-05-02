@@ -14,6 +14,6 @@ use App\Favorite;
 class FavoriteRepository
 {
     public function show($user_id){
-        return Favorite::where('user_id',$user_id)->with('Map')->get();
+        return Favorite::where('user_id',$user_id)->with('Map','User')->get();
     }
 }

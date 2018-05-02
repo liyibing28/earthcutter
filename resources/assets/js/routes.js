@@ -41,6 +41,11 @@ let routes = [
 
     },
     {
+        path: '/about',
+        name: 'about',
+        component: require('./components/pages/About'),
+    },
+    {
         path: '/profile',
         name: 'profile',
         component: require('./components/user/Profile'),

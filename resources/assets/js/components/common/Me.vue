@@ -13,7 +13,7 @@
                 <mu-icon slot="left" value="rate_review"/>
             </mu-list-item>
             <mu-divider />
-            <mu-list-item title="设置">
+            <mu-list-item title="设置" to="/about">
                 <mu-icon slot="left" value="settings"/>
             </mu-list-item>
             <mu-divider />

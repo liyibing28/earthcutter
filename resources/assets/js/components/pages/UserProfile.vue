@@ -89,7 +89,7 @@
             },
             sendMessage(){
                 let formData = {
-                    to_user_id : 37,
+                    to_user_id : this.$route.params.id,
                     body : this.body,
                 }
 

@@ -16,4 +16,24 @@ class MessageRepository
     public function create(array $attributes){
         return Message::create($attributes);
     }
+
+    public function deleteByUser($user, $friend){
+        $messages = Message::where([
+            ['user', $user],
+            ['friend' , $friend]
+        ]);
+
+        return $messages->delete();
+    }
+
+    public function deleteByMessage($user, $messageId){
+        return Message::destroy($messageId);
+
+    }
+
+    public function showByUserAndFriend($user, $friend){
+        return Message::where([['user',$user],['friend',$friend]])->with('fromUser')->latest()->get();
+    }
+
+
 }

@@ -62,7 +62,7 @@ class UsersController extends Controller
 
         return response()->json([
             'filename' => $filename,
-            'path' => auth()->guard('api')->user()->avatar
+            'path' => auth()->guard('api')->user()
         ]);
 
 

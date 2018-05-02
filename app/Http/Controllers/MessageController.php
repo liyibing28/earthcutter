@@ -9,22 +9,22 @@ use Auth;
 
 class MessageController extends Controller
 {
-    protected $message;
+    protected $messageRepository;
 
     /**
      * MessageController constructor.
      * @param $message
      */
-    public function __construct(MessageRepository $message)
+    public function __construct(MessageRepository $messageRepository)
     {
-        $this->message = $message;
+        $this->messageRepository = $messageRepository;
         $this->middleware('auth');
     }
 
 
     public function sendMessage()
     {
-        $message = $this->message->create([
+        $message = $this->messageRepository->create([
            'to_user_id' => 60,
            'user' => auth()->guard('api')->user()->id,
            'friend' => 60,
@@ -33,7 +33,7 @@ class MessageController extends Controller
            'body' => \request('body'),
         ]);
 
-        $message = $this->message->create([
+        $message = $this->messageRepository->create([
             'from_user_id' => auth()->guard('api')->user()->id,
             'to_user_id' => 60,
             'user' => 60,
@@ -61,9 +61,21 @@ class MessageController extends Controller
     public function show($user_id){
         $authId = auth()->guard('api')->user()->id;
 
-        $messages = Message::where([['user',$authId],['friend',$user_id]])->latest()->get();
+        //$messages = Message::where([['user',$authId],['friend',$user_id]])->latest()->get();
+        $messages = $this->messageRepository->showByUserAndFriend($authId, $user_id);
 
         return response()->json($messages);
+    }
+
+    public function deleteByUser($userId){
+        $user = auth()->guard('api')->user()->id;
+        return $this->messageRepository->deleteByUser($user, $userId);
+    }
+
+    public function deleteByMessage($messageId){
+        $user = auth()->guard('api')->user()->id;
+        return $this->messageRepository->deleteByMessage($user, $messageId);
+
     }
 
 

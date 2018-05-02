@@ -13,4 +13,8 @@ class Favorite extends Model
     public function Map(){
         return $this->belongsTo(Map::class,'map_id');
     }
+
+    public function User(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
