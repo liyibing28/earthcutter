@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
 
-        Passport::tokensExpireIn(Carbon::now()->addMinute(30)); //access token 30 分钟内过期
+        Passport::tokensExpireIn(Carbon::now()->addMinute(120)); //access token 30 分钟内过期
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(10)); //过期之后携带refresh token获取新的access token 10天不用输入密码登录
     }
 }

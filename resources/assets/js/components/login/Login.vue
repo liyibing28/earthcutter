@@ -85,10 +85,10 @@
     }
 
     .main {
-        width: 100%;
-        height: 75vh;
-        margin-top: 25px;
-    }
+         width: 100%;
+         height: 75vh;
+         margin-top: 25px;
+     }
 
     .form-list {
         width: 80%;

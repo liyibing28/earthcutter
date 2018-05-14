@@ -6,8 +6,6 @@
                     <div class="form-group">
                         <register-form></register-form>
                     </div>
-
-
                 </div>
             </layout>
         </div>

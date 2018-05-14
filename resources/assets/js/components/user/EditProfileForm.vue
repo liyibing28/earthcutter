@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import * as types from './../../store/mutation-type'
+    import * as types from '../../store/mutation-type'
     export default {
         name: "edit-profile-form",
         created(){

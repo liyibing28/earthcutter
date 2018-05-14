@@ -25,13 +25,13 @@ let routes = [
         path: '/register',
         name: 'register', //指定路由
         component: require('./components/register/Register'),
-        meta: { requireGuest: true },
+        meta: {},
     },
     {
         path: '/login',
         name: 'login', //指定路由
         component: require('./components/login/Login'),
-        meta: { requireGuest: true },
+        meta: {},
     },
     {
         path: '/me',
