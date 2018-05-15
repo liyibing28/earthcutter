@@ -1,17 +1,25 @@
 <template>
     <div>
+    <div>
         <router-view></router-view>
     </div>
-
+    <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="popupVisible">
+        {{popupContent}}
+    </mu-popup>
+    </div>
 </template>
 
 <script>
     import jwtToken from './../helpers/jwt'
     import Cookie from 'js-cookie'
     import TopMenu from './common/TopMenu'
+    import { mapGetters } from 'vuex';
     export default {
         components : {
-            TopMenu
+            TopMenu,
+        },
+        computed : {
+            ...mapGetters(['popupVisible', 'popupContent']),
         },
         created(){
             if(jwtToken.getToken()) {               //存在accesstoken 为登录状态

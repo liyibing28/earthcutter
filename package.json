@@ -4,7 +4,7 @@
     "cnName": "地球切割者",
     "author": {
         "name": "李宜柄",
-        "email": "liyibing28@gmail.com",
+        "email": "liyibing28@gmail.com"
     },
     "scripts": {
         "dev": "npm run development",
@@ -17,26 +17,26 @@
     },
     "devDependencies": {
         "axios": "^0.18",
-        "bootstrap": "^4.0.0",
-        "popper.js": "^1.12",
-        "cross-env": "^5.1",
+        "bootstrap": "^4.1.1",
+        "cross-env": "^5.1.5",
         "jquery": "^3.2",
         "laravel-mix": "^2.0",
-        "lodash": "^4.17.4",
+        "lodash": "^4.17.10",
+        "popper.js": "^1.12",
         "vue": "^2.5.7"
     },
     "dependencies": {
-        "ajv": "^6.4.0",
+        "ajv": "^6.5.0",
         "babel-plugin-transform-object-rest-spread": "^6.26.0",
-        "better-scroll": "^1.10.2",
+        "better-scroll": "^1.11.1",
         "js-cookie": "^2.2.0",
-        "less": "^3.0.1",
+        "less": "^3.0.4",
         "less-loader": "^4.1.0",
         "muse-ui": "^2.1.0",
-        "vee-validate": "^2.0.6",
-        "vue-amap": "^0.5.4",
-        "vue-baidu-map": "^0.21.6",
-        "vue-core-image-upload": "^2.4.5",
+        "vee-validate": "^2.0.9",
+        "vue-amap": "^0.5.6",
+        "vue-baidu-map": "^0.21.10",
+        "vue-core-image-upload": "^2.4.6",
         "vue-router": "^3.0.1",
         "vuex": "^3.0.1"
     }

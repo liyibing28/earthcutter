@@ -4,17 +4,17 @@
 
             <mu-flexbox orient="vertical" justify="center">
                 <mu-flexbox-item>
-                    <mu-text-field v-model="name" label="用户名" name="name" hintText="请输入用户名" type="text" labelFloat/>
+                    <mu-text-field v-model="this.name" label="用户名" name="name" hintText="请输入用户名" type="text" labelFloat/>
                 </mu-flexbox-item>
                 <mu-flexbox-item>
-                    <mu-text-field v-model="email" label="邮箱" name="email" hintText="请输入邮箱" type="email" labelFloat/><br/>
+                    <mu-text-field v-model="this.email" label="邮箱" name="email" hintText="请输入邮箱" type="email" labelFloat/><br/>
                 </mu-flexbox-item>
                 <mu-flexbox-item>
-                    <mu-text-field v-model="password" label="密码" name="password" hintText="请输入密码" type="password" labelFloat/>
+                    <mu-text-field v-model="this.password" label="密码" name="password" hintText="请输入密码" type="password" labelFloat/>
                 </mu-flexbox-item>
 
                 <mu-flexbox-item>
-                    <mu-text-field label="确认密码" hintText="请再次输入密码" name="password_confirmation" type="password" labelFloat/>
+                    <mu-text-field v-model="this.rePassword" label="确认密码" hintText="请再次输入密码" name="rePassword" type="password" labelFloat/>
                 </mu-flexbox-item>
 
                 <mu-raised-button label="注册" type="submit" class="demo-raised-button" primary/>
@@ -30,6 +30,9 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex';
+    import { sendRegisterReq } from './../../api/user'
+
     export default {
         name: "register-form",
         data(){
@@ -37,29 +40,55 @@
                 name: '',
                 email: '',
                 password: '',
+                rePassword: '',
             }
         },
         methods : {
+            async validateEmail(){
+                if(!this._validate(this.email)){
+                    this.setPopup('请输入正确邮箱地址');
+                    return false;
+                }
+            },
+            async validateName(){
+                if(!this._validate(this.name,'username')){
+                    this.setPopup('请输入正确用户名');
+                    return false;
+                }
+            },
+            async validatePassword(){
+                if (this.form.password !== this.form.rePassword) {
+                    this.setPopup('两次输入密码不一致');
+                    return false;
+                }
+            },
             register(){
+                if(!validateEmail()){
+                    return;
+                }
+
                 let formData = {
                     name: this.name,
                     email: this.email,
                     password: this.password
-                }
+                };
                 axios.post('api/register',formData).then(response => {
-                    this.showToast();
                     this.$router.push({name: 'map'});
                 })
             },
-            showToast () {
-                this.toast = true;
-                if (this.toastTimer) clearTimeout(this.toastTimer);
-                this.toastTimer = setTimeout(() => { this.toast = false }, 2000)
+            _validate(str, type = 'email') {
+                const reg = {
+                    //邮箱
+                    email: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
+                    // 11位手机号
+                    mobile: /^1(3|4|5|6|7|8)\d{9}$/,
+                    // 16位以内用户名
+                    username: /^[a-zA-Z_]\w{0,15}$/,
+                    //16位以内密码
+                    password: /^.{1,16}$/
+                };
+                return reg[type].test(str);
             },
-            hideToast () {
-                this.toast = false
-                if (this.toastTimer) clearTimeout(this.toastTimer)
-            }
         }
     }
 </script>
