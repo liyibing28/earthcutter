@@ -66,11 +66,10 @@ let routes = [
         meta: {},
     },
     {
-        path: '/add-mark',
-        name: 'add-mark',
-        component: require('./components/map/AddMark'),
-        meta: { reqiureAuth: true }
-
+        path: '/add-marker/:lng/:lat',
+        name: 'add-marker', //指定路由
+        component: require('./components/map/EditMark'),
+        meta: {},
     },
     {
         path:'/edit-profile',

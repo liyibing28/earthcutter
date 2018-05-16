@@ -84,6 +84,7 @@
                 this.$router.push({name:'edit-profile'});
             },
             imageuploaded(response) {
+
                 console.log(response);
             },
             alterInfo(infoName = 'email') {

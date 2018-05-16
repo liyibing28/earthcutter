@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repository\MapRepository;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MapController extends Controller
 {
@@ -70,5 +71,15 @@ class MapController extends Controller
         return response()->json($data);
     }
 
+    public function uploadImage(Request $request){
+        $file = $request->file('img');
+        $filename = Storage::disk('upyun')->put('/markers/image',$file);
+        $filePath =  'http://'.config('filesystems.disks.upyun.domain').'/'.$filename;
+
+        return response()->json([
+            'code' => '200',
+            'info' => $filePath,
+        ]);
+    }
 
 }
