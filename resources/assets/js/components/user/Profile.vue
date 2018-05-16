@@ -56,6 +56,7 @@
 <script>
     import Layout from "../common/Layout";
     import {mapState} from "vuex";
+    import {mapActions} from 'vuex';
     import jwtToken from './../../helpers/jwt'
     import VueCoreImageUpload from 'vue-core-image-upload'
     export default {
@@ -89,8 +90,12 @@
                 this.$router.push({name:'edit-profile'});
             },
             logout(){
-
-            }
+                this.$store.dispatch('logoutRequest');
+                this.setPopup('退出登录成功！');
+            },
+            ...mapActions([
+                'setPopup',
+            ])
         }
 
     }

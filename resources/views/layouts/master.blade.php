@@ -8,9 +8,7 @@
     <title>EARTHCUTTER</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    {{--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=1hfCQtjMGprIZn7DxUQcCdt57k270GLl"></script>--}}
-
-    <link rel="stylesheet" href="/public/css/app.css">
+    <link rel="stylesheet" href="/css/app.css">
     <style>
         html,
         body {

@@ -4,10 +4,10 @@
             <div class="main">
                 <ul class="form-list">
                     <li>
-                        <mu-text-field v-model="email" label="邮箱" labelFloat />
+                        <mu-text-field v-model="email" label="邮箱"/>
                     </li>
                     <li>
-                        <mu-text-field v-model="password" type="password" label="密码" labelFloat />
+                        <mu-text-field v-model="password" type="password" label="密码"/>
                     </li>
                     <li>
                         <router-link to="/register" tag="a" class="option">注册账号</router-link>
@@ -22,22 +22,15 @@
 </template>
 
 <script>
-    import LoginForm from './LoginForm';
     import Layout from "../common/Layout";
     import MTransition from "../base/m-transition";
-
-    const REG = {
-        isMobile: /^1(3|4|5|6|7|8)\d{9}$/,
-        isUsername: /^[a-z_]\w{0,15}$/,
-        isPassword: /^.{1,16}$/
-    };
+    import { mapActions } from 'vuex';
 
     export default {
         name: "login",
         components : {
             MTransition,
             Layout,
-            LoginForm
         },
         data(){
             return {
@@ -46,25 +39,51 @@
             }
         },
         methods: {
-            login(){
+            async login(){
+                if(!this._validate(this.email)){
+                    this.setPopup('邮箱地址不合法，请输入合法邮箱');
+                    return false;
+                }
+
+                if(!this._validate(this.password,'password')){
+                    this.setPopup('密码不合法，请输入16位以内密码');
+                    return false;
+                }
+
                 let formData = {
-                    //client_id : '2',
-                    //client_secret : 'VhH4ImtwYsxZxgFIT1GPCina0WezYROdTmwnb7ec',
-                    //scope : '',
-                    //grant_type : 'password',
                     email: this.email,
                     password: this.password
                 };
                 this.$store.dispatch('loginRequest',formData).then(response => {
+                    this.setPopup('登录成功！');
                     this.$router.push({name: 'map'});
                 }).catch(error => {
                     if(error.response.status === 421){
-                        this.bag.add('password','邮箱和密码不符','auth');
+                        this.setPopup('邮箱或密码不符');
                     }
 
-                    console.log();
                 })
-            }
+            },
+            // 校验输入
+            _validate(str, type = 'email') {
+                const reg = {
+                    // 11位手机号
+                    mobile: /^1(3|4|5|6|7|8)\d{9}$/,
+                    // 4位验证码
+                    vcode: /^\d{4}$/,
+                    //邮箱
+                    email: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
+                    // 16位以内用户名
+                    username: /^[a-zA-Z_]\w{0,15}$/,
+                    // 16位以内密码
+                    password: /^.{1,16}$/
+                };
+                return reg[type].test(str);
+            },
+            ...mapActions([
+                'setPopup',
+            ])
+
         }
     }
 </script>

@@ -902,10 +902,10 @@ module.exports = g;
 "use strict";
 /* unused harmony export Store */
 /* unused harmony export install */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return mapState; });
 /* unused harmony export mapMutations */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapGetters; });
-/* unused harmony export mapActions */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapGetters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapActions; });
 /* unused harmony export createNamespacedHelpers */
 /**
  * vuex v3.0.1
@@ -12995,12 +12995,14 @@ module.exports = defaults;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_auth_user__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_login__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__state__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__getters__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__actions__ = __webpack_require__(67);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mutations__ = __webpack_require__(68);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vuex_dist_logger__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_vuex_dist_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_vuex_dist_logger__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_register__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__state__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__getters__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__actions__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__mutations__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vuex_dist_logger__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_vuex_dist_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_vuex_dist_logger__);
+
 
 
 
@@ -13014,15 +13016,20 @@ module.exports = defaults;
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
+var debug = "development" !== 'production';
+
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     modules: {
         AuthUser: __WEBPACK_IMPORTED_MODULE_2__modules_auth_user__["a" /* default */],
         Login: __WEBPACK_IMPORTED_MODULE_3__modules_login__["a" /* default */],
         EditProfile: __WEBPACK_IMPORTED_MODULE_4__modules_edit_profile__["a" /* default */],
-        actions: __WEBPACK_IMPORTED_MODULE_7__actions__,
-        state: __WEBPACK_IMPORTED_MODULE_5__state__["a" /* default */],
-        mutations: __WEBPACK_IMPORTED_MODULE_8__mutations__["a" /* default */],
-        getters: __WEBPACK_IMPORTED_MODULE_6__getters__
+        Register: __WEBPACK_IMPORTED_MODULE_5__modules_register__["a" /* default */],
+        actions: __WEBPACK_IMPORTED_MODULE_8__actions__,
+        state: __WEBPACK_IMPORTED_MODULE_6__state__["a" /* default */],
+        mutations: __WEBPACK_IMPORTED_MODULE_9__mutations__["a" /* default */],
+        getters: __WEBPACK_IMPORTED_MODULE_7__getters__,
+        strict: debug,
+        plugins: debug ? [__WEBPACK_IMPORTED_MODULE_10_vuex_dist_logger___default()()] : []
     },
     strict: true
 }));
@@ -52528,12 +52535,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var state = {
-    // 顶部提示框
-    popupVisible: false,
-    // 顶部提示框内容
-    popupContent: ''
-};
+
+/**
+ * @constant state - Vuex状态
+ * */
+var state = {};
 
 /* harmony default export */ __webpack_exports__["a"] = (state);
 
@@ -52559,22 +52565,10 @@ var popupContent = function popupContent(state) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["setPopup"] = setPopup;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mutation_types__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_config__ = __webpack_require__(225);
 
 
-
-function setPopup(_ref, content) {
-    var commit = _ref.commit;
-
-    commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* SET_POPUP_CONTENT */], content);
-    commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["c" /* SET_POPUP_VISIBLE */], true);
-    setTimeout(function () {
-        commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* SET_POPUP_CONTENT */], '');
-        commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["c" /* SET_POPUP_VISIBLE */], false);
-    }, __WEBPACK_IMPORTED_MODULE_1__config_config__["a" /* popupDelay */]);
-}
 
 /***/ }),
 /* 68 */
@@ -52582,17 +52576,9 @@ function setPopup(_ref, content) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mutation_types__ = __webpack_require__(9);
-var _mutations;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
-
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["c" /* SET_POPUP_VISIBLE */], function (state, visible) {
-    state.popupVisible = Boolean(state.popupContent && visible);
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* SET_POPUP_CONTENT */], function (state, content) {
-    state.popupContent = content;
-}), _mutations);
+var mutations = {};
 
 /* harmony default export */ __webpack_exports__["a"] = (mutations);
 
@@ -53364,6 +53350,9 @@ exports.push([module.i, "\n.form-list[data-v-cf1cbf80] {\n  width: 80%;\n  margi
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers_jwt__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -53380,6 +53369,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -53390,29 +53384,57 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
-    methods: {
+    methods: _extends({
+        validateEmail: function validateEmail() {
+            if (!this._validate(this.email, 'email')) {
+                this.setPopup('请输入正确邮箱地址');
+                return false;
+            }
+        },
+        validatePassword: function validatePassword() {
+            if (!this._validate(this.password, 'password')) {
+                this.setPopup('密码不合法，请输入16位以内密码');
+                return false;
+            }
+        },
         login: function login() {
             var _this = this;
 
+            if (!this.validateEmail()) {
+                return;
+            }
+            if (!this.validatePassword()) {
+                return;
+            }
+
             var formData = {
-                //client_id : '2',
-                //client_secret : 'VhH4ImtwYsxZxgFIT1GPCina0WezYROdTmwnb7ec',
-                //scope : '',
-                //grant_type : 'password',
                 email: this.email,
                 password: this.password
             };
             this.$store.dispatch('loginRequest', formData).then(function (response) {
                 _this.$router.push({ name: 'map' });
             }).catch(function (error) {
-                if (error.response.status === 421) {
-                    _this.bag.add('password', '邮箱和密码不符', 'auth');
+                if (error.response.status === false) {
+                    _this.setPopup('邮箱或密码不符');
                 }
-
-                console.log();
             });
+        },
+        _validate: function _validate(str) {
+            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'email';
+
+            var reg = {
+                //邮箱
+                email: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
+                // 11位手机号
+                mobile: /^1(3|4|5|6|7|8)\d{9}$/,
+                // 16位以内用户名
+                username: /^[a-zA-Z_]\w{0,15}$/,
+                //16位以内密码
+                password: /^.{1,16}$/
+            };
+            return reg[type].test(str);
         }
-    }
+    }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapActions */])(['setPopup']))
 
 });
 
@@ -53424,64 +53446,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("ul", { staticClass: "form-list" }, [
-    _c(
-      "li",
-      [
-        _c("mu-text-field", {
-          attrs: { label: "邮箱", labelFloat: "" },
-          model: {
-            value: _vm.email,
-            callback: function($$v) {
-              _vm.email = $$v
-            },
-            expression: "email"
-          }
-        })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
-        _c("mu-text-field", {
-          attrs: { type: "password", label: "密码", labelFloat: "" },
-          model: {
-            value: _vm.password,
-            callback: function($$v) {
-              _vm.password = $$v
-            },
-            expression: "password"
-          }
-        })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "li",
-      [
+  return _c(
+    "form",
+    {
+      attrs: { method: "POST" },
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          return _vm.login($event)
+        }
+      }
+    },
+    [
+      _c("ul", { staticClass: "form-list" }, [
         _c(
-          "router-link",
-          { staticClass: "option", attrs: { to: "/register", tag: "a" } },
-          [_vm._v("注册账号")]
+          "li",
+          [
+            _c("mu-text-field", {
+              attrs: { label: "邮箱", labelFloat: "" },
+              model: {
+                value: _vm.email,
+                callback: function($$v) {
+                  _vm.email = $$v
+                },
+                expression: "email"
+              }
+            })
+          ],
+          1
         ),
         _vm._v(" "),
         _c(
-          "router-link",
-          { staticClass: "option", attrs: { to: "", tag: "a" } },
-          [_vm._v("忘记密码")]
+          "li",
+          [
+            _c("mu-text-field", {
+              attrs: { type: "password", label: "密码", labelFloat: "" },
+              model: {
+                value: _vm.password,
+                callback: function($$v) {
+                  _vm.password = $$v
+                },
+                expression: "password"
+              }
+            })
+          ],
+          1
         ),
         _vm._v(" "),
-        _c("mu-raised-button", {
-          attrs: { label: "登录", primary: "" },
-          on: { click: _vm.login }
-        })
-      ],
-      1
-    )
-  ])
+        _c(
+          "li",
+          [
+            _c(
+              "router-link",
+              { staticClass: "option", attrs: { to: "/register", tag: "a" } },
+              [_vm._v("注册账号")]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              { staticClass: "option", attrs: { to: "", tag: "a" } },
+              [_vm._v("忘记密码")]
+            ),
+            _vm._v(" "),
+            _c("mu-raised-button", {
+              attrs: { label: "登录", type: "submit", primary: "" }
+            })
+          ],
+          1
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -54073,7 +54108,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -54084,15 +54119,10 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(222);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__api_user__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_user__ = __webpack_require__(94);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-//
 //
 //
 //
@@ -54138,95 +54168,40 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         };
     },
 
-    methods: {
-        validateEmail: function () {
-            var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
-                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-                    while (1) {
-                        switch (_context.prev = _context.next) {
-                            case 0:
-                                if (this._validate(this.email)) {
-                                    _context.next = 3;
-                                    break;
-                                }
-
-                                this.setPopup('请输入正确邮箱地址');
-                                return _context.abrupt('return', false);
-
-                            case 3:
-                            case 'end':
-                                return _context.stop();
-                        }
-                    }
-                }, _callee, this);
-            }));
-
-            function validateEmail() {
-                return _ref.apply(this, arguments);
+    methods: _extends({
+        validateName: function validateName() {
+            if (!this._validate(this.name, 'username')) {
+                this.setPopup('请输入正确用户名');
+                return false;
+            }
+        },
+        validateEmail: function validateEmail() {
+            if (!this._validate(this.email)) {
+                this.setPopup('请输入正确邮箱地址');
+                return false;
+            }
+        },
+        validatePassword: function validatePassword() {
+            if (!this._validate(this.password, 'password')) {
+                this.setPopup('密码不合法，请输入16位以内密码');
+                return false;
             }
 
-            return validateEmail;
-        }(),
-        validateName: function () {
-            var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
-                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-                    while (1) {
-                        switch (_context2.prev = _context2.next) {
-                            case 0:
-                                if (this._validate(this.name, 'username')) {
-                                    _context2.next = 3;
-                                    break;
-                                }
-
-                                this.setPopup('请输入正确用户名');
-                                return _context2.abrupt('return', false);
-
-                            case 3:
-                            case 'end':
-                                return _context2.stop();
-                        }
-                    }
-                }, _callee2, this);
-            }));
-
-            function validateName() {
-                return _ref2.apply(this, arguments);
+            if (this.form.password !== this.form.rePassword) {
+                this.setPopup('两次输入密码不一致');
+                return false;
             }
-
-            return validateName;
-        }(),
-        validatePassword: function () {
-            var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee3() {
-                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-                    while (1) {
-                        switch (_context3.prev = _context3.next) {
-                            case 0:
-                                if (!(this.form.password !== this.form.rePassword)) {
-                                    _context3.next = 3;
-                                    break;
-                                }
-
-                                this.setPopup('两次输入密码不一致');
-                                return _context3.abrupt('return', false);
-
-                            case 3:
-                            case 'end':
-                                return _context3.stop();
-                        }
-                    }
-                }, _callee3, this);
-            }));
-
-            function validatePassword() {
-                return _ref3.apply(this, arguments);
-            }
-
-            return validatePassword;
-        }(),
+        },
         register: function register() {
             var _this = this;
 
-            if (!validateEmail()) {
+            if (!this.validateName()) {
+                return;
+            }
+            if (!this.validateEmail()) {
+                return;
+            }
+            if (!this.validatePassword()) {
                 return;
             }
 
@@ -54254,7 +54229,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             };
             return reg[type].test(str);
         }
-    }
+    }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapActions */])(['setPopup']))
 });
 
 /***/ }),
@@ -54281,138 +54256,127 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "form",
-        {
-          attrs: { method: "POST" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.register($event)
-            }
+  return _c("div", [
+    _c(
+      "form",
+      {
+        attrs: { method: "POST" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+            return _vm.register($event)
           }
-        },
-        [
-          _c(
-            "mu-flexbox",
-            { attrs: { orient: "vertical", justify: "center" } },
-            [
-              _c(
-                "mu-flexbox-item",
-                [
-                  _c("mu-text-field", {
-                    attrs: {
-                      label: "用户名",
-                      name: "name",
-                      hintText: "请输入用户名",
-                      type: "text",
-                      labelFloat: ""
+        }
+      },
+      [
+        _c(
+          "mu-flexbox",
+          { attrs: { orient: "vertical", justify: "center" } },
+          [
+            _c(
+              "mu-flexbox-item",
+              [
+                _c("mu-text-field", {
+                  attrs: {
+                    label: "用户名",
+                    name: "name",
+                    hintText: "请输入用户名",
+                    type: "text",
+                    labelFloat: ""
+                  },
+                  model: {
+                    value: this.name,
+                    callback: function($$v) {
+                      _vm.$set(this, "name", $$v)
                     },
-                    model: {
-                      value: this.name,
-                      callback: function($$v) {
-                        _vm.$set(this, "name", $$v)
-                      },
-                      expression: "this.name"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "mu-flexbox-item",
-                [
-                  _c("mu-text-field", {
-                    attrs: {
-                      label: "邮箱",
-                      name: "email",
-                      hintText: "请输入邮箱",
-                      type: "email",
-                      labelFloat: ""
+                    expression: "this.name"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "mu-flexbox-item",
+              [
+                _c("mu-text-field", {
+                  attrs: {
+                    label: "邮箱",
+                    name: "email",
+                    hintText: "请输入邮箱",
+                    type: "email",
+                    labelFloat: ""
+                  },
+                  model: {
+                    value: this.email,
+                    callback: function($$v) {
+                      _vm.$set(this, "email", $$v)
                     },
-                    model: {
-                      value: this.email,
-                      callback: function($$v) {
-                        _vm.$set(this, "email", $$v)
-                      },
-                      expression: "this.email"
-                    }
-                  }),
-                  _c("br")
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "mu-flexbox-item",
-                [
-                  _c("mu-text-field", {
-                    attrs: {
-                      label: "密码",
-                      name: "password",
-                      hintText: "请输入密码",
-                      type: "password",
-                      labelFloat: ""
+                    expression: "this.email"
+                  }
+                }),
+                _c("br")
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "mu-flexbox-item",
+              [
+                _c("mu-text-field", {
+                  attrs: {
+                    label: "密码",
+                    name: "password",
+                    hintText: "请输入密码",
+                    type: "password",
+                    labelFloat: ""
+                  },
+                  model: {
+                    value: this.password,
+                    callback: function($$v) {
+                      _vm.$set(this, "password", $$v)
                     },
-                    model: {
-                      value: this.password,
-                      callback: function($$v) {
-                        _vm.$set(this, "password", $$v)
-                      },
-                      expression: "this.password"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "mu-flexbox-item",
-                [
-                  _c("mu-text-field", {
-                    attrs: {
-                      label: "确认密码",
-                      hintText: "请再次输入密码",
-                      name: "rePassword",
-                      type: "password",
-                      labelFloat: ""
+                    expression: "this.password"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "mu-flexbox-item",
+              [
+                _c("mu-text-field", {
+                  attrs: {
+                    label: "确认密码",
+                    hintText: "请再次输入密码",
+                    name: "rePassword",
+                    type: "password",
+                    labelFloat: ""
+                  },
+                  model: {
+                    value: this.rePassword,
+                    callback: function($$v) {
+                      _vm.$set(this, "rePassword", $$v)
                     },
-                    model: {
-                      value: this.rePassword,
-                      callback: function($$v) {
-                        _vm.$set(this, "rePassword", $$v)
-                      },
-                      expression: "this.rePassword"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("mu-raised-button", {
-                staticClass: "demo-raised-button",
-                attrs: { label: "注册", type: "submit", primary: "" }
-              })
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.toast
-        ? _c("mu-toast", {
-            attrs: { message: "请前往邮箱验证用户" },
-            on: { close: _vm.hideToast }
-          })
-        : _vm._e()
-    ],
-    1
-  )
+                    expression: "this.rePassword"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("mu-raised-button", {
+              staticClass: "demo-raised-button",
+              attrs: { label: "注册", type: "submit", primary: "" }
+            })
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -54635,12 +54599,19 @@ exports.push([module.i, "\n.login_box[data-v-ba0d9948] {\n  padding: 20px;\n}\n.
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LoginForm__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LoginForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__LoginForm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(222);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Layout__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__common_Layout__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__base_m_transition__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__base_m_transition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__base_m_transition__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(7);
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 //
 //
 //
@@ -54668,19 +54639,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
-var REG = {
-    isMobile: /^1(3|4|5|6|7|8)\d{9}$/,
-    isUsername: /^[a-z_]\w{0,15}$/,
-    isPassword: /^.{1,16}$/
-};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "login",
     components: {
         MTransition: __WEBPACK_IMPORTED_MODULE_2__base_m_transition___default.a,
-        Layout: __WEBPACK_IMPORTED_MODULE_1__common_Layout___default.a,
-        LoginForm: __WEBPACK_IMPORTED_MODULE_0__LoginForm___default.a
+        Layout: __WEBPACK_IMPORTED_MODULE_1__common_Layout___default.a
     },
     data: function data() {
         return {
@@ -54689,29 +54653,82 @@ var REG = {
         };
     },
 
-    methods: {
-        login: function login() {
-            var _this = this;
+    methods: _extends({
+        login: function () {
+            var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+                var _this = this;
 
-            var formData = {
-                //client_id : '2',
-                //client_secret : 'VhH4ImtwYsxZxgFIT1GPCina0WezYROdTmwnb7ec',
-                //scope : '',
-                //grant_type : 'password',
-                email: this.email,
-                password: this.password
+                var formData;
+                return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                if (this._validate(this.email)) {
+                                    _context.next = 3;
+                                    break;
+                                }
+
+                                this.setPopup('邮箱地址不合法，请输入合法邮箱');
+                                return _context.abrupt("return", false);
+
+                            case 3:
+                                if (this._validate(this.password, 'password')) {
+                                    _context.next = 6;
+                                    break;
+                                }
+
+                                this.setPopup('密码不合法，请输入16位以内密码');
+                                return _context.abrupt("return", false);
+
+                            case 6:
+                                formData = {
+                                    email: this.email,
+                                    password: this.password
+                                };
+
+                                this.$store.dispatch('loginRequest', formData).then(function (response) {
+                                    _this.setPopup('登录成功！');
+                                    _this.$router.push({ name: 'map' });
+                                }).catch(function (error) {
+                                    if (error.response.status === 421) {
+                                        _this.setPopup('邮箱或密码不符');
+                                    }
+                                });
+
+                            case 8:
+                            case "end":
+                                return _context.stop();
+                        }
+                    }
+                }, _callee, this);
+            }));
+
+            function login() {
+                return _ref.apply(this, arguments);
+            }
+
+            return login;
+        }(),
+
+        // 校验输入
+        _validate: function _validate(str) {
+            var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'email';
+
+            var reg = {
+                // 11位手机号
+                mobile: /^1(3|4|5|6|7|8)\d{9}$/,
+                // 4位验证码
+                vcode: /^\d{4}$/,
+                //邮箱
+                email: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
+                // 16位以内用户名
+                username: /^[a-zA-Z_]\w{0,15}$/,
+                // 16位以内密码
+                password: /^.{1,16}$/
             };
-            this.$store.dispatch('loginRequest', formData).then(function (response) {
-                _this.$router.push({ name: 'map' });
-            }).catch(function (error) {
-                if (error.response.status === 421) {
-                    _this.bag.add('password', '邮箱和密码不符', 'auth');
-                }
-
-                console.log();
-            });
+            return reg[type].test(str);
         }
-    }
+    }, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapActions */])(['setPopup']))
 });
 
 /***/ }),
@@ -54733,7 +54750,7 @@ var render = function() {
               "li",
               [
                 _c("mu-text-field", {
-                  attrs: { label: "邮箱", labelFloat: "" },
+                  attrs: { label: "邮箱" },
                   model: {
                     value: _vm.email,
                     callback: function($$v) {
@@ -54750,7 +54767,7 @@ var render = function() {
               "li",
               [
                 _c("mu-text-field", {
-                  attrs: { type: "password", label: "密码", labelFloat: "" },
+                  attrs: { type: "password", label: "密码" },
                   model: {
                     value: _vm.password,
                     callback: function($$v) {
@@ -54939,7 +54956,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     components: {
         Layout: __WEBPACK_IMPORTED_MODULE_1__Layout___default.a },
     name: "me",
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["c" /* mapState */])({
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["d" /* mapState */])({
         user: function user(state) {
             return state.AuthUser;
         }
@@ -55314,6 +55331,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
         Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a,
@@ -55330,12 +55348,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         this.$store.dispatch('setAuthUser');
     },
 
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["c" /* mapState */])({
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["d" /* mapState */])({
         user: function user(state) {
             return state.AuthUser;
         }
     })),
-    methods: {
+    methods: _extends({
         editProfile: function editProfile() {
             this.$router.push({ name: 'edit-profile' });
         },
@@ -55347,8 +55365,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
             this.$router.push({ name: 'edit-profile' });
         },
-        logout: function logout() {}
-    }
+        logout: function logout() {
+            this.$store.dispatch('logoutRequest');
+            this.setPopup('退出登录成功！');
+        }
+    }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapActions */])(['setPopup']))
 
 });
 
@@ -60804,7 +60825,7 @@ module.exports = function (css) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(207)
+  __webpack_require__(228)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -60849,46 +60870,8 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 207 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(208);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(2)("267c2bb2", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-8142f38c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-8142f38c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 208 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 207 */,
+/* 208 */,
 /* 209 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -60918,11 +60901,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
         TopMenu: __WEBPACK_IMPORTED_MODULE_2__common_TopMenu___default.a
     },
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapGetters */])(['popupVisible', 'popupContent'])),
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["c" /* mapGetters */])(['popupVisible', 'popupContent']), Object(__WEBPACK_IMPORTED_MODULE_3_vuex__["d" /* mapState */])({
+        POP: function POP(state) {
+            return state.Register;
+        }
+    })),
     created: function created() {
         if (__WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].getToken()) {
             //存在accesstoken 为登录状态
@@ -61073,10 +61061,10 @@ var render = function() {
             position: "top",
             overlay: false,
             popupClass: "popup-top",
-            open: _vm.popupVisible
+            open: _vm.POP.popupVisible
           }
         },
-        [_vm._v("\n    " + _vm._s(_vm.popupContent) + "\n")]
+        [_vm._v("\n    " + _vm._s(_vm.POP.popupContent) + "\n")]
       )
     ],
     1
@@ -67114,6 +67102,87 @@ if (hadRuntime) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return popupDelay; });
 // 顶部提示框消失延迟
 var popupDelay = 1500;
+
+/***/ }),
+/* 226 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mutation_types__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_config__ = __webpack_require__(225);
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    state: {
+        // 顶部提示框
+        popupVisible: false,
+        // 顶部提示框内容
+        popupContent: ''
+    },
+    mutations: (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["c" /* SET_POPUP_VISIBLE */], function (state, visible) {
+        state.popupVisible = Boolean(state.popupContent && visible);
+    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* SET_POPUP_CONTENT */], function (state, content) {
+        state.popupContent = content;
+    }), _mutations),
+    actions: {
+        setPopup: function setPopup(_ref, content) {
+            var commit = _ref.commit;
+
+            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* SET_POPUP_CONTENT */], content);
+            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["c" /* SET_POPUP_VISIBLE */], true);
+            setTimeout(function () {
+                commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* SET_POPUP_CONTENT */], '');
+                commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["c" /* SET_POPUP_VISIBLE */], false);
+            }, __WEBPACK_IMPORTED_MODULE_1__config_config__["a" /* popupDelay */]);
+        }
+    }
+});
+
+/***/ }),
+/* 227 */,
+/* 228 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(229);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("6054a17a", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-8142f38c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-8142f38c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./App.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n#app[data-v-8142f38c] {\n  color: #00bcd4;\n  overflow: hidden;\n}\n.popup-top[data-v-8142f38c] {\n  width: 100%;\n  opacity: 0.8;\n  height: 48px;\n  line-height: 48px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n}\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);

@@ -21,7 +21,6 @@
 
             </mu-flexbox>
         </form>
-        <mu-toast v-if="toast" message="请前往邮箱验证用户" @close="hideToast"/>
 
 
     </div>
@@ -44,26 +43,37 @@
             }
         },
         methods : {
-            async validateEmail(){
-                if(!this._validate(this.email)){
-                    this.setPopup('请输入正确邮箱地址');
-                    return false;
-                }
-            },
-            async validateName(){
+            validateName(){
                 if(!this._validate(this.name,'username')){
                     this.setPopup('请输入正确用户名');
                     return false;
                 }
             },
-            async validatePassword(){
+            validateEmail(){
+                if(!this._validate(this.email)){
+                    this.setPopup('请输入正确邮箱地址');
+                    return false;
+                }
+            },
+            validatePassword(){
+                if(!this._validate(this.password,'password')){
+                    this.setPopup('密码不合法，请输入16位以内密码');
+                    return false;
+                }
+
                 if (this.form.password !== this.form.rePassword) {
                     this.setPopup('两次输入密码不一致');
                     return false;
                 }
             },
             register(){
-                if(!validateEmail()){
+                if(!this.validateName()){
+                    return;
+                }
+                if(!this.validateEmail()){
+                    return;
+                }
+                if(!this.validatePassword()){
                     return;
                 }
 
@@ -89,6 +99,9 @@
                 };
                 return reg[type].test(str);
             },
+            ...mapActions([
+                'setPopup',
+            ])
         }
     }
 </script>
