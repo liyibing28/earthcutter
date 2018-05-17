@@ -60591,6 +60591,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
 
 
 
@@ -60610,7 +60612,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             body: '',
             comments: [],
             is_favorite: false,
-            is_edit: true,
+            is_edit: false,
             creater: {}
         };
     },
@@ -60620,14 +60622,13 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         axios.get('/api/show-mark/' + this.$route.params.id).then(function (response) {
             _this.marker = response.data[0];
             _this.creater = _this.marker.user;
+            if (_this.user.email === _this.creater.email) {
+                _this.is_edit = true;
+            }
+
             console.log(_this.marker);
         });
 
-        if (this.user.email === this.creater.email) {
-            this.is_edit = true;
-        } else {
-            this.is_edit = false;
-        }
         axios.post('/api/is-favorited/' + this.$route.params.id).then(function (response) {
             _this.is_favorite = response.data;
         });
@@ -80933,11 +80934,6 @@ var render = function() {
                 })
               : _vm._e(),
             _vm._v(" "),
-            _c("mu-raised-button", {
-              attrs: { label: "评论", primary: "" },
-              on: { click: _vm.open }
-            }),
-            _vm._v(" "),
             _vm.is_edit
               ? _c("mu-raised-button", {
                   attrs: {
@@ -80949,7 +80945,12 @@ var render = function() {
                     primary: ""
                   }
                 })
-              : _vm._e()
+              : _vm._e(),
+            _vm._v(" "),
+            _c("mu-raised-button", {
+              attrs: { label: "评论", primary: "" },
+              on: { click: _vm.open }
+            })
           ],
           1
         ),

@@ -17,9 +17,11 @@
                 <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
                 <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite" ></mu-raised-button>
 
+                <mu-raised-button v-if="is_edit" label="编辑" :to="{name: 'edit-marker', params:{id: this.$route.params.id}}" primary/>
+
                 <mu-raised-button label="评论" @click="open" primary/>
 
-                <mu-raised-button v-if="is_edit" label="编辑" :to="{name: 'edit-marker', params:{id: this.$route.params.id}}" primary/>
+
             </div>
 
 
@@ -63,7 +65,7 @@
                 body : '',
                 comments: [],
                 is_favorite : false,
-                is_edit: true,
+                is_edit: false,
                 creater:{},
             }
         },
@@ -71,15 +73,17 @@
             axios.get('/api/show-mark/' + this.$route.params.id).then(response => {
             this.marker = response.data[0];
             this.creater = this.marker.user;
+            if(this.user.email === this.creater.email)
+            {
+                this.is_edit = true;
+            }
+
             console.log(this.marker);
             });
 
-            if (this.user.email === this.creater.email){
-                this.is_edit = true;
-            }
-            else {
-                this.is_edit = false;
-            }
+
+
+
             axios.post('/api/is-favorited/' + this.$route.params.id).then(response =>{
                 this.is_favorite = response.data;
             });
