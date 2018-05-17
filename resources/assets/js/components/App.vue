@@ -1,11 +1,12 @@
 <template>
     <div>
-    <div>
-        <router-view></router-view>
-    </div>
-    <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="POP.popupVisible">
-        {{POP.popupContent}}
-    </mu-popup>
+        <mu-linear-progress :size="0"/>
+        <div>
+            <router-view></router-view>
+        </div>
+        <mu-popup position="top" :overlay="false" popupClass="popup-top" :open="POP.popupVisible">
+            {{POP.popupContent}}
+        </mu-popup>
     </div>
 </template>
 

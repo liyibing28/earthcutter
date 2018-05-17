@@ -2,20 +2,24 @@
     <layout title="详情" :has_menu="false">
         <div class="">
             <mu-sub-header>{{marker.title}}</mu-sub-header>
-            <mu-sub-header> 创建者：<router-link :to="{ name: 'user-profile', params:{id : user.id }}">{{user.name}}</router-link></mu-sub-header>
+            <mu-sub-header> 创建者：<router-link :to="{ name: 'user-profile', params:{id : creater.id }}">{{creater.name}}</router-link></mu-sub-header>
 
             <mu-sub-header> 创建时间：{{marker.created_at}} </mu-sub-header>
 
             <mu-divider></mu-divider>
             <mu-content-block>
                 <mu-sub-header> 类型：{{marker.mark_type}} </mu-sub-header>
-                <p>{{marker.body}}</p>
+                <div class="panel-body" v-html="marker.body"></div>
             </mu-content-block>
+
+
             <div class="text-center">
                 <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
-                <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite"></mu-raised-button>
+                <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite" ></mu-raised-button>
 
                 <mu-raised-button label="评论" @click="open" primary/>
+
+                <mu-raised-button v-if="is_edit" label="编辑" :to="{name: 'edit-marker', params:{id: this.$route.params.id}}" primary/>
             </div>
 
 
@@ -43,6 +47,7 @@
 <script>
     import Layout from "../common/Layout";
     import Comment from "../common/Comment"
+    import {mapState} from 'vuex';
 
     export default {
         components: {
@@ -58,19 +63,31 @@
                 body : '',
                 comments: [],
                 is_favorite : false,
-                user:{},
+                is_edit: true,
+                creater:{},
             }
         },
         mounted() {
             axios.get('/api/show-mark/' + this.$route.params.id).then(response => {
             this.marker = response.data[0];
-            this.user = this.marker.user;
+            this.creater = this.marker.user;
             console.log(this.marker);
             });
 
+            if (this.user.email === this.creater.email){
+                this.is_edit = true;
+            }
+            else {
+                this.is_edit = false;
+            }
             axios.post('/api/is-favorited/' + this.$route.params.id).then(response =>{
                 this.is_favorite = response.data;
             });
+        },
+        computed :{
+            ...mapState({
+                user: state => state.AuthUser
+            })
         },
         methods: {
             open () {
@@ -106,6 +123,8 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+    .panel-body img{
+        width: 100%;
+    }
 </style>

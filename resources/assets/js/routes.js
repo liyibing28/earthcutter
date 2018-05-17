@@ -68,6 +68,12 @@ let routes = [
     {
         path: '/add-marker/:lng/:lat',
         name: 'add-marker', //指定路由
+        component: require('./components/map/AddMark'),
+        meta: {},
+    },
+    {
+        path: '/edit-marker/:id',
+        name: 'edit-marker', //指定路由
         component: require('./components/map/EditMark'),
         meta: {},
     },

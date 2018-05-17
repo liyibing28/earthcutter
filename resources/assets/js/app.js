@@ -11,13 +11,13 @@ window.Vue = require('vue');
 import VueRouter from 'vue-router';
 import router from './routes';
 import store from './store/index';
+
 import MuseUI from 'muse-ui';
 import 'muse-ui/dist/muse-ui.css';
 import App from './components/App'
 import VeeValidate from 'vee-validate';
 import jwtToken from './helpers/jwt';
 import VueAMap from 'vue-amap';
-import VueHtml5Editor from 'vue-html5-editor'
 
 import VueQuillEditor from 'vue-quill-editor'
 // require styles
@@ -45,48 +45,6 @@ Vue.use(VueRouter);
 Vue.use(MuseUI);
 Vue.use(VeeValidate);
 Vue.use(VueAMap);
-Vue.use(VueHtml5Editor,{
-    showModuleName: false,
-    icons: {
-        image: "fa fa-file-image-o",
-    },
-    visibleModules: [
-        "image",
-    ],
-    // 配置图片模块
-    // config image module
-    image: {
-        // 文件最大体积，单位字节  max file size
-        sizeLimit: 512 * 1024,
-        // 上传参数,默认把图片转为base64而不上传
-        upload: {
-            url: '/api/uploadImage',
-            headers: {},
-            params: {},
-            fieldName: 'img',
-        },
-        // 压缩参数,默认使用localResizeIMG进行压缩,设置为null禁止压缩
-        // compression config,default resize image by localResizeIMG (https://github.com/think2011/localResizeIMG)
-        // set null to disable compression
-        compress: {
-            width: 1600,
-            height: 1600,
-            quality: 80
-        },
-        // 响应数据处理,最终返回图片链接
-        // handle response data，return image url
-        uploadHandler(responseText){
-            //default accept json data like  {ok:false,msg:"unexpected"} or {ok:true,data:"image url"}
-            console.log(responseText);
-            let json = JSON.parse(responseText)
-            if (!json.ok) {
-                alert(json.msg)
-            } else {
-                return json.data
-            }
-        }
-    },
-});
 
 Vue.use(VueQuillEditor, {
 

@@ -2,10 +2,10 @@
     <m-transition type="slide">
         <layout :has_menu="false" title="增加标记">
             <mu-content-block >
-                <mu-select-field v-model="marker.markerType" :labelFocusClass="['label-foucs']" label="选择分享类型">
+                <mu-select-field v-model="addMarkerInfo.markerType" :labelFocusClass="['label-foucs']" label="选择分享类型">
                     <mu-menu-item v-for="text,index in list" :key="index" :value="text" :title="text" />
                 </mu-select-field>
-                <mu-text-field v-model="marker.title" label="简介" hintText="请输入一些简单介绍"/><br/>
+                <mu-text-field v-model="addMarkerInfo.title" label="简介" hintText="请输入一些简单介绍"/><br/>
 
                 <div>
                     <!-- 图片上传组件辅助-->
@@ -22,7 +22,7 @@
                     <!--富文本编辑器组件-->
                     <div>
                         <quill-editor
-                                v-model="marker.body"
+                                v-model="addMarkerInfo.body"
                                 ref="myQuillEditor"
                                 :options="editorOption"
                         >
@@ -31,7 +31,7 @@
 
                 </div>
                 <br/>
-                <mu-switch label="仅自己可见" v-model="marker.isHidden" /><br/>
+                <mu-switch label="仅自己可见" v-model="addMarkerInfo.isHidden" /><br/>
                 <br/>
                 <mu-raised-button @click="addMark" primary>创建 </mu-raised-button>
             </mu-content-block>
@@ -54,7 +54,7 @@
     ];
 
     export default {
-        name: "EditMark",
+        name: "AddMark",
         components: {Layout, MTransition, VueCoreImageUpload,},
         data(){
             return{
@@ -78,21 +78,13 @@
                     }
                 } , // 富文本编辑器配置
                 list: ['营地', '路况', '风景', '天气'],
-                marker: {
+                addMarkerInfo: {
                     markerType : '营地',
                     title: '',
                     body: '',
                     isHidden: false,
                 },
-                user:{},
             }
-        },
-        mounted() {
-            axios.get('/api/show-mark/' + this.$route.params.id).then(response => {
-                this.marker = response.data[0];
-                this.user = this.marker.user;
-                console.log(this.marker);
-            });
         },
         methods:{
             addMark(){
