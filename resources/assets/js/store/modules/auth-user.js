@@ -5,23 +5,29 @@ export default {
         authenticated : false,
         name: null,
         email: null,
+        avatar: null,
     },
     mutations : {
         [types.SET_AUTH_USER](state, payload) {
             state.authenticated = true;
             state.name = payload.user.name;
             state.email = payload.user.email;
+            state.avatar = payload.user.avatar;
         },
         [types.UNSET_AUTH_USER](state) {
             state.authenticated = false;
             state.name = null;
             state.email = null;
+            state.avatar = null;
         },
         [types.UPDATE_PROFILE_NAME](state, payload) {
             state.name = payload.value;
         },
         [types.UPDATE_PROFILE_EMAIL](state, payload) {
             state.email = payload.value;
+        },
+        [types.UPDATE_PROFILE_AVATAR](state, payload) {
+            state.avatar = payload.value;
         },
     },
     actions : {
@@ -47,5 +53,11 @@ export default {
                 dispatch('logoutRequest')
             })
         },
+        updateAvatar({commit}, avatar){
+            commit({
+                type : types.UPDATE_PROFILE_AVATAR,
+                value : avatar,
+            })
+        }
     }
 }

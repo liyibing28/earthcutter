@@ -1,9 +1,10 @@
 <template>
-    <layout title="我的主页" :has_menu="false">
+    <layout title="我的账户" :has_menu="false">
             <div class="content">
                 <mu-card class="card">
                     <mu-list>
                         <mu-list-item title="头像">
+                            <mu-avatar :src="avatar" slot="left" :size="30"></mu-avatar>
                             <vue-core-image-upload
                                     :crop="false"
                                     @imageuploaded="imageuploaded"
@@ -77,15 +78,24 @@
         computed :{
             ...mapState({
                 user: state => state.AuthUser
-            })
+            }),
+            avatar:{
+                get(){
+                    return this.$store.state.AuthUser.avatar;
+                },
+                set(value){
+                    this.$store.commit({
+                        type : types.UPDATE_PROFILE_avatar,
+                        value : value,
+                    })
+                }
+            }
         },
         methods : {
             editProfile(){
                 this.$router.push({name:'edit-profile'});
             },
             imageuploaded(response) {
-
-                console.log(response);
             },
             alterInfo(infoName = 'email') {
                 this.$router.push({name:'edit-profile'});
@@ -96,6 +106,7 @@
             },
             ...mapActions([
                 'setPopup',
+                'updateAvatar',
             ])
         }
 

@@ -31,6 +31,11 @@ class MessageRepository
 
     }
 
+    public function deleteByFriend($user,$friend){
+        $messages = Message::where([['user',$user],['friend',$friend]])->get();
+        return $messages->delete();
+    }
+
     public function showByUserAndFriend($user, $friend){
         return Message::where([['user',$user],['friend',$friend]])->with('fromUser')->latest()->get();
     }

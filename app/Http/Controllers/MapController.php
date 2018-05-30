@@ -45,6 +45,33 @@ class MapController extends Controller
 
     }
 
+    public function update($id){
+
+//        return response()->json([
+//            'code' => 100
+//        ]);
+        $data  = [
+            'mark_type' => request('markerType'),
+            'title' => request('title'),
+            'body' => \request('body'),
+            'is_hidden' => \request('isHidden'),
+        ];
+
+        $return = $this->mapRepository->update($id,$data);
+        if($return){
+            return response()->json([
+                'code' => 200,
+                'info' => $return,
+            ]);
+        }else{
+            return response()->json([
+                'code' => 401,
+                'info' => 'update error!!',
+            ]);
+        }
+
+    }
+
     public function show(){
         $data = [
             'north' => \request('north'),
@@ -59,7 +86,7 @@ class MapController extends Controller
     }
 
     public function showMarker($markerId){
-        $data = $this->mapRepository->find($markerId);
+        $data = $this->mapRepository->findWithUser($markerId);
         //$data = null;
         return response()->json($data);
     }
@@ -80,6 +107,17 @@ class MapController extends Controller
             'code' => '200',
             'info' => $filePath,
         ]);
+    }
+
+    public function delete($id){
+        $marker = $this->mapRepository->find($id);
+        if($marker->delete()){
+            return response()->json([
+                'status' => 200,
+                'info' => 'delete success!'
+            ]);
+        }
+
     }
 
 }

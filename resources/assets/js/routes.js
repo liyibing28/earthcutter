@@ -114,6 +114,12 @@ let routes = [
         name: 'myComments',
         component: require('./components/user/MyComments'),
         meta: { reqiureAuth: true}
+    },
+    {
+        path:'/comments/:id',
+        name: 'comments-list',
+        component: require('./components/pages/CommentsList'),
+        meta: { reqiureAuth: true}
     }
 ];
 

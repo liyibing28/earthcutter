@@ -35,6 +35,8 @@ Route::post('/sendMessage', 'MessageController@sendMessage')->middleware('auth:a
 Route::post('/message', 'MessageController@messages')->middleware('auth:api');
 Route::post('/message/{user_id}', 'MessageController@show')->middleware('auth:api');
 
+Route::post('/message/delete/{friend}' , 'MessageController@deleteByFriend');
+
 Route::get('/show-mark', 'MapController@show');
 Route::get('/show-mark/{markerId}', 'MapController@showMarker');
 Route::get('/show-comments/{markerId}', 'CommentController@showComments');
@@ -45,6 +47,10 @@ Route::post('/is-favorited/{markerId}','FavoriteController@isFavorited')->middle
 Route::post('/show-favorite','FavoriteController@showFavorite')->middleware('auth:api');
 Route::post('/my-markers','MapController@showMyMarkers')->middleware('auth:api');
 Route::post('/my-comments','CommentController@showMyComments')->middleware('auth:api');
+Route::post('/delete-mark/{id}','MapController@delete');
+
+Route::post('/edit-mark/{id}','MapController@update');
+
 Route::post('/avatar','UsersController@changAvatar');
 
 Route::post('/uploadImage', 'MapController@uploadImage');

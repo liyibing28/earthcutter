@@ -1,6 +1,6 @@
 <template>
     <m-transition type="slide">
-        <layout :title="title" :has_menu="false">
+        <layout :title="toUser" :has_menu="false">
                 <div class="bg-image" :style="bgStyle" ref="bgImage">
                     <div class="marker-wrapper" v-show="markers.length>0">
                         <div class="sendMessage" ref="playBtn" @click="open">
@@ -27,8 +27,9 @@
                     </div>
                 </div>
 
-            <mu-dialog :open="dialog" :title="title" @close="close">
-                <mu-text-field v-model="body" hintText="消息内容" name="body" :fullWidth="true"/>
+            <mu-dialog :open="dialog" :title="toUser" @close="close">
+                <mu-text-field v-model="title" hintText="subject: required" name="title" :fullWidth="true"/>
+                <mu-text-field v-model="body" hintText="content" name="body" :fullWidth="true" multiLine :rows="3" :rowsMax="6"/>
                 <mu-flat-button slot="actions" @click="close" primary label="取消"/>
                 <mu-flat-button slot="actions" primary @click="sendMessage" label="发送"/>
             </mu-dialog>
@@ -41,6 +42,8 @@
     import Loading from "./../base/loading"
     import MTransition from "../base/m-transition";
     import MarkerList from "../base/marker-list";
+    import { mapActions } from 'vuex';
+
     export default {
         components: {
             MarkerList,
@@ -51,6 +54,7 @@
         data () {
             return {
                 dialog: false,
+                title: '',
                 body : '',
                 user_id: '',
                 status : false,
@@ -63,7 +67,7 @@
             }
         },
         computed:{
-            title(){
+            toUser(){
                 return this.user.name;
             },
             bgStyle() {
@@ -90,18 +94,23 @@
             sendMessage(){
                 let formData = {
                     to_user_id : this.$route.params.id,
+                    title: this.title,
                     body : this.body,
-                }
+                };
 
                 axios.post('/api/sendMessage',formData).then(response => {
                     this.status = response.data.status;
                     this.close();
+                    this.setPopup('发送成功');
                 });
             },
             selectItem(item, index) {
                 console.log(this.markers[index]);
                 this.$router.push('/map/'+ this.markers[index].id);
             },
+            ...mapActions([
+                'setPopup',
+            ]),
         }
     }
 </script>

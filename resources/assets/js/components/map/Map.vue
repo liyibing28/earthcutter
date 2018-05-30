@@ -3,21 +3,22 @@
         <div class="amap-wrapper">
             <el-amap class="amap-box" ref="map"  vid="amap" :amap-manager="amapManager" :plugin="plugin" :center="center" :events="events">
                 <!--//添加标记-->
-                <el-amap-marker vid="add-marker" :position="marker.position" :visible="marker.visible" :draggable="marker.draggable" ></el-amap-marker>
+                <el-amap-marker  vid="add-marker" :position="marker.position" :visible="marker.visible" :draggable="marker.draggable" ></el-amap-marker>
                 <el-amap-info-window vid="add-marker-info-window" :position="marker.position" :visible="markerWindow.visible" :autoMove="true" :template="template">
                     <div>
                         <p>address: {{ marker.address }}</p>
-                        <mu-raised-button label="添加 marker" :to="{ name: 'add-marker', params:{lng: marker.position[0], lat:marker.position[1]}}"/>
+                        <mu-raised-button label="添加 marker" :to="{ name: 'add-marker', params:{lng: marker.position[0], lat:marker.position[1]}} " primary/>
                     </div>
                 </el-amap-info-window>
 
                 <!--//展示已存在标记-->
-                <el-amap-marker v-for="marker in markers" :key="marker.id" :position="marker.position" :events="marker.events" ></el-amap-marker>
+                <el-amap-marker content="<i class='fa fa-anchor fa-lg'></i>" v-for="marker in markers" :key="marker.id" :position="marker.position" :events="marker.events" ></el-amap-marker>
                 <el-amap-info-window v-if="window" :position="window.position" :visible="window.visible" :template="window.template">
                     <div>
                         <router-link :to="{ name: 'mark-detail', params:{id : window.id }}">{{window.title}}</router-link>
                     </div>
                 </el-amap-info-window>
+
 
             </el-amap>
         </div>
@@ -59,6 +60,7 @@
                     clickable: true,
                     address : '',
                 },
+
                 markerWindow: {
                     //template: '<mu-raised-button label="下面弹出" @click="open(\'bottom\')"/>',
                     autoMove: true,
@@ -72,16 +74,20 @@
                         template: '<span>1</span>',
                     }
                 ],
+                markerRefs: [],
                 points: [],
                 windows: [],
                 window: '',
                 events: {
                     init: (o) => {
-                        //console.log(o.getCenter());
-                        //console.log(this.$refs.map.$$getInstance());
-                        o.getCity(result => {
-                            //console.log(result)
-                        })
+                        setTimeout(() => {
+                            console.log(this.markerRefs);
+                            let cluster = new AMap.MarkerClusterer(o, this.markerRefs,{
+                                gridSize: 80,
+                                renderCluserMarker: this._renderCluserMarker
+                            });
+                            console.log(cluster);
+                        }, 1000);
                     },
                     'moveend': () => {
                     },
@@ -132,8 +138,6 @@
                     body: '',
                     isHidden: false,
                 },
-                //底部弹出组件
-                bottomPopup: false,
                 template : ``,
             }
         },
@@ -193,6 +197,31 @@
                     this.close('bottom');
                 });
             },
+
+            _renderCluserMarker(context) {
+                const count = this.markers.length;
+
+                let factor = Math.pow(context.count/count, 1/18)
+                let div = document.createElement('div');
+                let Hue = 180 - factor* 180;
+                let bgColor = 'hsla('+Hue+',100%,50%,0.7)';
+                let fontColor = 'hsla('+Hue+',100%,20%,1)';
+                let borderColor = 'hsla('+Hue+',100%,40%,1)';
+                let shadowColor = 'hsla('+Hue+',100%,50%,1)';
+                div.style.backgroundColor = bgColor
+                let size = Math.round(30 + Math.pow(context.count/count,1/5) * 20);
+                div.style.width = div.style.height = size+'px';
+                div.style.border = 'solid 1px '+ borderColor;
+                div.style.borderRadius = size/2 + 'px';
+                div.style.boxShadow = '0 0 1px '+ shadowColor;
+                div.innerHTML = context.count;
+                div.style.lineHeight = size+'px';
+                div.style.color = fontColor;
+                div.style.fontSize = '14px';
+                div.style.textAlign = 'center';
+                context.marker.setOffset(new AMap.Pixel(-size/2,-size/2));
+                context.marker.setContent(div)
+            }
         },
 
     }

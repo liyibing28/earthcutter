@@ -28,7 +28,7 @@ class TokenProxy
     public function login($email, $password)
     {
 
-        if(auth()->attempt(['email' => $email, 'password' => $password, 'is_active' => 1]))
+        if(auth()->attempt(['email' => $email, 'password' => $password, 'is_active' => 1]))//尝试验证用户名与密码
         {
             return $this->proxy('password', [
                 'username' => $email,
@@ -84,11 +84,13 @@ class TokenProxy
 
     public function proxy($grantType, array $data = [])
     {
+        //加入passport登录所需的client id
         $data = array_merge($data, [
             'client_id' => env('PASSPOT_Client_ID'),
             'client_secret' => env('PASSPOT_Client_Secret'),
             'grant_type' => $grantType,
         ]);
+        //oauth登录提交到的url
         $response = $this->http->post('http://earthcutter.test/oauth/token', [
             'form_params' => $data
         ]);
@@ -99,6 +101,6 @@ class TokenProxy
             'token' => $token['access_token'],
             'auth_id' => md5($token['refresh_token']),
             'expires_in' => $token['expires_in']
-        ])->cookie('refreshToken', $token['refresh_token'], 14400, null, null, false, true);
+        ])->cookie('refreshToken', $token['refresh_token'], 14400, null, null, false, true);//cookie有效期为10天
     }
 }

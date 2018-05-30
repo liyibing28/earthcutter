@@ -4,7 +4,7 @@
             <li @click="selectItem(marker,index)" v-for="(marker,index) in markers" :key="index" class="item">
                 <div class="content">
                     <h2 class="name">{{marker.title}}</h2>
-                    <p class="desc">{{marker.body}}</p>
+                    <p class="desc">{{marker.created_at}}</p>
                 </div>
             </li>
         </ul>

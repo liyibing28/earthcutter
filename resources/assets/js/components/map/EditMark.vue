@@ -2,8 +2,8 @@
     <m-transition type="slide">
         <layout :has_menu="false" title="增加标记">
             <mu-content-block >
-                <mu-select-field v-model="marker.markerType" :labelFocusClass="['label-foucs']" label="选择分享类型">
-                    <mu-menu-item v-for="text,index in list" :key="index" :value="text" :title="text" />
+                <mu-select-field v-model="marker.mark_type" :labelFocusClass="['label-foucs']" label="选择分享类型">
+                    <mu-menu-item v-for="text,index in list" :key="text" :value="text" :title="text" />
                 </mu-select-field>
                 <mu-text-field v-model="marker.title" label="简介" hintText="请输入一些简单介绍"/><br/>
 
@@ -33,7 +33,8 @@
                 <br/>
                 <mu-switch label="仅自己可见" v-model="marker.isHidden" /><br/>
                 <br/>
-                <mu-raised-button @click="addMark" primary>创建 </mu-raised-button>
+                <mu-raised-button @click="editMark" primary>修改</mu-raised-button>
+                <mu-raised-button @click="deleteMark" primary>删除</mu-raised-button>
             </mu-content-block>
         </layout>
     </m-transition>
@@ -78,12 +79,7 @@
                     }
                 } , // 富文本编辑器配置
                 list: ['营地', '路况', '风景', '天气'],
-                marker: {
-                    markerType : '营地',
-                    title: '',
-                    body: '',
-                    isHidden: false,
-                },
+                marker: {},
                 user:{},
             }
         },
@@ -95,17 +91,22 @@
             });
         },
         methods:{
-            addMark(){
+            editMark(){
                 let formData ={
-                    markerType : this.addMarkerInfo.markerType,
-                    title : this.addMarkerInfo.title,
-                    body : this.addMarkerInfo.body,
-                    isHidden : this.addMarkerInfo.isHidden,
-                    lng : this.$route.params.lng,
-                    lat : this.$route.params.lat,
+                    markerType : this.marker.mark_type,
+                    title : this.marker.title,
+                    body : this.marker.body,
+                    isHidden : this.marker.isHidden,
                 };
-                axios.post('/api/add-mark',formData).then(response => {
-                    this.$router.push('/');
+                axios.post('/api/edit-mark/' + this.$route.params.id ,formData).then(response => {
+
+                    console.log(response.data);
+                    if(response.data.code === 200){
+                        this.setPopup('修改成功！');
+                        this.$router.push({name : 'map', params : {id: this.$route.params.id}});
+                    }else {
+                        this.setPopup('修改出错！！');
+                    }
                 });
             },
             imageuploaded(response) {
@@ -124,6 +125,20 @@
                 } else {
                     this.setPopup('图片上传失败');
                 }
+            },
+            deleteMark(){
+                axios.post('/api/delete-mark/' + this.$route.params.id).then(response =>{
+
+                    if(response.status === 200)
+                    {
+                        this.$router.push('/');
+                        this.setPopup('删除标记点成功');
+                    }
+                    else{
+                        this.setPopup('标记点未删除');
+                    }
+
+                });
             },
             ...mapActions([
                 'setPopup',

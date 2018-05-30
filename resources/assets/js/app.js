@@ -51,7 +51,7 @@ Vue.use(VueQuillEditor, {
 });
 VueAMap.initAMapApiLoader({
     key: 'e29bd81fa85d6b97a3db2b05e655fc2b',
-    plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','Geocoder'],
+    plugin: ['AMap.Autocomplete','MarkerClusterer', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor','Geocoder'],
     // 默认高德 sdk 版本为 1.4.4
     v: '1.4.4'
 });

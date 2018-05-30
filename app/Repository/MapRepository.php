@@ -18,13 +18,22 @@ class MapRepository
         return Map::create($attributes);
     }
 
+    public function update($id ,array $attributes){
+        $mark = Map::find($id);
+        return $mark->update($attributes);
+    }
+
     public function show(array $attributes){
         return Map::all();
         //return Map::where(['latitude','<=',$attributes['north']],['latitude','>=',$attributes['south']],['longitude','<=',$attributes['east']],['longitude','>=',$attributes['west']]);
     }
 
-    public function find($markerId){
+    public function findWithUser($markerId){
         return Map::where('id',$markerId)->with('User')->get();
+    }
+
+    public function find($markerId){
+        return Map::find($markerId);
     }
 
     public function findUserMarkers($userId){

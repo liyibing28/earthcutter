@@ -58,11 +58,10 @@ class UsersController extends Controller
 
         //$user->avatar = asset(public_path('/avatars/').$filename);
 
-        $user->save;
+        $user->save();
 
         return response()->json([
-            'filename' => $filename,
-            'path' => auth()->guard('api')->user()
+            'path' => $user->avatar,
         ]);
 
 

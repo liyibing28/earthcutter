@@ -1,4 +1,5 @@
 <template>
+    <m-transition>
     <layout title="详情" :has_menu="false">
         <div class="">
             <mu-sub-header>{{marker.title}}</mu-sub-header>
@@ -13,16 +14,17 @@
             </mu-content-block>
 
 
-            <div class="text-center">
-                <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
-                <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite" ></mu-raised-button>
+            <mu-paper class="footer-wrap">
+                <div class="text-center">
+                    <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
+                    <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite" ></mu-raised-button>
 
-                <mu-raised-button v-if="is_edit" label="编辑" :to="{name: 'edit-marker', params:{id: this.$route.params.id}}" primary/>
+                    <mu-raised-button label="评论" @click="showComments" primary/>
 
-                <mu-raised-button label="评论" @click="open" primary/>
+                    <mu-raised-button v-if="is_edit" label="编辑" @click="editMark" primary/>
 
-
-            </div>
+                </div>
+            </mu-paper>
 
 
 
@@ -44,15 +46,18 @@
             </mu-dialog>
         </div>
     </layout>
+    </m-transition>
 </template>
 
 <script>
     import Layout from "../common/Layout";
     import Comment from "../common/Comment"
     import {mapState} from 'vuex';
+    import MTransition from "../base/m-transition";
 
     export default {
         components: {
+            MTransition,
             Comment,
             Layout},
         name: "mark-detail",
@@ -64,7 +69,7 @@
                 markerId: '',
                 body : '',
                 comments: [],
-                is_favorite : false,
+                is_favorite : '',
                 is_edit: false,
                 creater:{},
             }
@@ -81,11 +86,13 @@
             console.log(this.marker);
             });
 
-
-
-
             axios.post('/api/is-favorited/' + this.$route.params.id).then(response =>{
-                this.is_favorite = response.data;
+                if (response.data){
+                    this.is_favorite = 'favorites';
+                }
+                else{
+                    this.is_favorite = '';
+                }
             });
         },
         computed :{
@@ -113,15 +120,21 @@
                 });
             },
             showComments(){
-                axios.get('/api/show-comments/' + this.$route.params.id).then(response =>{
-                    console.log(response.data);
-                    this.comments = response.data;
-                });
+                this.$router.push({name : 'comments-list', params:{id : this.$route.params.id}});
+
             },
             addFavorite(){
                 axios.post('/api/add-favorite/' + this.$route.params.id).then(response =>{
-                    this.is_favorite = response.data;
+                    if (response.data){
+                        this.is_favorite = 'favorites';
+                    }
+                    else{
+                        this.is_favorite = '';
+                    }
                 });
+            },
+            editMark(){
+                this.$router.push({name: 'edit-marker', params:{id: this.$route.params.id}});
             }
         }
     }
@@ -129,6 +142,13 @@
 
 <style>
     .panel-body img{
+        width: 100%;
+    }
+    .footer-wrap {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
         width: 100%;
     }
 </style>

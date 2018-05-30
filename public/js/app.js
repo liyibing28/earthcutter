@@ -1820,10 +1820,11 @@ var index_esm = {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SET_AUTH_USER; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UNSET_AUTH_USER; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return UPDATE_PROFILE_NAME; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return UPDATE_PROFILE_EMAIL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return UPDATE_PROFILE_NAME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return UPDATE_PROFILE_EMAIL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return SET_POPUP_VISIBLE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return SET_POPUP_CONTENT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return UPDATE_PROFILE_AVATAR; });
 var SET_AUTH_USER = 'SET_AUTH_USER';
 
 var UNSET_AUTH_USER = 'UNSET_AUTH_USER';
@@ -1835,6 +1836,8 @@ var UPDATE_PROFILE_EMAIL = 'UPDATE_PROFILE_EMAIL';
 var SET_POPUP_VISIBLE = 'SET_POPUP_VISIBLE';
 
 var SET_POPUP_CONTENT = 'SET_POP_CONTENT';
+
+var UPDATE_PROFILE_AVATAR = 'SET_PROFILE_AVATAR';
 
 /***/ }),
 /* 8 */
@@ -30350,7 +30353,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_8_vue_amap___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_9_vue_quill_editor___default.a, {});
 __WEBPACK_IMPORTED_MODULE_8_vue_amap___default.a.initAMapApiLoader({
     key: 'e29bd81fa85d6b97a3db2b05e655fc2b',
-    plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'Geocoder'],
+    plugin: ['AMap.Autocomplete', 'MarkerClusterer', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'Geocoder'],
     // 默认高德 sdk 版本为 1.4.4
     v: '1.4.4'
 });
@@ -52763,6 +52766,11 @@ var routes = [{
     name: 'myComments',
     component: __webpack_require__(202),
     meta: { reqiureAuth: true }
+}, {
+    path: '/comments/:id',
+    name: 'comments-list',
+    component: __webpack_require__(250),
+    meta: { reqiureAuth: true }
 }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -52807,20 +52815,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     state: {
         authenticated: false,
         name: null,
-        email: null
+        email: null,
+        avatar: null
     },
     mutations: (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["a" /* SET_AUTH_USER */], function (state, payload) {
         state.authenticated = true;
         state.name = payload.user.name;
         state.email = payload.user.email;
+        state.avatar = payload.user.avatar;
     }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["d" /* UNSET_AUTH_USER */], function (state) {
         state.authenticated = false;
         state.name = null;
         state.email = null;
-    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["f" /* UPDATE_PROFILE_NAME */], function (state, payload) {
+        state.avatar = null;
+    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["g" /* UPDATE_PROFILE_NAME */], function (state, payload) {
         state.name = payload.value;
-    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* UPDATE_PROFILE_EMAIL */], function (state, payload) {
+    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["f" /* UPDATE_PROFILE_EMAIL */], function (state, payload) {
         state.email = payload.value;
+    }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* UPDATE_PROFILE_AVATAR */], function (state, payload) {
+        state.avatar = payload.value;
     }), _mutations),
     actions: {
         setAuthUser: function setAuthUser(_ref) {
@@ -52851,6 +52864,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 dispatch('loginSuccess', response.data);
             }).catch(function (error) {
                 dispatch('logoutRequest');
+            });
+        },
+        updateAvatar: function updateAvatar(_ref4, avatar) {
+            var commit = _ref4.commit;
+
+            commit({
+                type: __WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* UPDATE_PROFILE_AVATAR */],
+                value: avatar
             });
         }
     }
@@ -53251,6 +53272,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -53287,6 +53309,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 clickable: true,
                 address: ''
             },
+
             markerWindow: {
                 //template: '<mu-raised-button label="下面弹出" @click="open(\'bottom\')"/>',
                 autoMove: true,
@@ -53298,16 +53321,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 draggable: false,
                 template: '<span>1</span>'
             }],
+            markerRefs: [],
             points: [],
             windows: [],
             window: '',
             events: {
                 init: function init(o) {
-                    //console.log(o.getCenter());
-                    //console.log(this.$refs.map.$$getInstance());
-                    o.getCity(function (result) {
-                        //console.log(result)
-                    });
+                    setTimeout(function () {
+                        console.log(_this.markerRefs);
+                        var cluster = new AMap.MarkerClusterer(o, _this.markerRefs, {
+                            gridSize: 80,
+                            renderCluserMarker: _this._renderCluserMarker
+                        });
+                        console.log(cluster);
+                    }, 1000);
                 },
                 'moveend': function moveend() {},
                 'zoomchange': function zoomchange() {},
@@ -53356,8 +53383,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 body: '',
                 isHidden: false
             },
-            //底部弹出组件
-            bottomPopup: false,
             template: ""
         };
     },
@@ -53425,6 +53450,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(response.data);
                 _this3.close('bottom');
             });
+        },
+        _renderCluserMarker: function _renderCluserMarker(context) {
+            var count = this.markers.length;
+
+            var factor = Math.pow(context.count / count, 1 / 18);
+            var div = document.createElement('div');
+            var Hue = 180 - factor * 180;
+            var bgColor = 'hsla(' + Hue + ',100%,50%,0.7)';
+            var fontColor = 'hsla(' + Hue + ',100%,20%,1)';
+            var borderColor = 'hsla(' + Hue + ',100%,40%,1)';
+            var shadowColor = 'hsla(' + Hue + ',100%,50%,1)';
+            div.style.backgroundColor = bgColor;
+            var size = Math.round(30 + Math.pow(context.count / count, 1 / 5) * 20);
+            div.style.width = div.style.height = size + 'px';
+            div.style.border = 'solid 1px ' + borderColor;
+            div.style.borderRadius = size / 2 + 'px';
+            div.style.boxShadow = '0 0 1px ' + shadowColor;
+            div.innerHTML = context.count;
+            div.style.lineHeight = size + 'px';
+            div.style.color = fontColor;
+            div.style.fontSize = '14px';
+            div.style.textAlign = 'center';
+            context.marker.setOffset(new AMap.Pixel(-size / 2, -size / 2));
+            context.marker.setContent(div);
         }
     }
 
@@ -54044,7 +54093,8 @@ var render = function() {
                             lng: _vm.marker.position[0],
                             lat: _vm.marker.position[1]
                           }
-                        }
+                        },
+                        primary: ""
                       }
                     })
                   ],
@@ -54056,7 +54106,11 @@ var render = function() {
             _vm._l(_vm.markers, function(marker) {
               return _c("el-amap-marker", {
                 key: marker.id,
-                attrs: { position: marker.position, events: marker.events }
+                attrs: {
+                  content: "<i class='fa fa-anchor fa-lg'></i>",
+                  position: marker.position,
+                  events: marker.events
+                }
               })
             }),
             _vm._v(" "),
@@ -56447,6 +56501,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -56473,15 +56528,24 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         user: function user(state) {
             return state.AuthUser;
         }
-    })),
+    }), {
+        avatar: {
+            get: function get() {
+                return this.$store.state.AuthUser.avatar;
+            },
+            set: function set(value) {
+                this.$store.commit({
+                    type: types.UPDATE_PROFILE_avatar,
+                    value: value
+                });
+            }
+        }
+    }),
     methods: _extends({
         editProfile: function editProfile() {
             this.$router.push({ name: 'edit-profile' });
         },
-        imageuploaded: function imageuploaded(response) {
-
-            console.log(response);
-        },
+        imageuploaded: function imageuploaded(response) {},
         alterInfo: function alterInfo() {
             var infoName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'email';
 
@@ -56491,7 +56555,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             this.$store.dispatch('logoutRequest');
             this.setPopup('退出登录成功！');
         }
-    }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapActions */])(['setPopup']))
+    }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapActions */])(['setPopup', 'updateAvatar']))
 
 });
 
@@ -58676,7 +58740,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "layout",
-    { attrs: { title: "我的主页", has_menu: false } },
+    { attrs: { title: "我的账户", has_menu: false } },
     [
       _c(
         "div",
@@ -58693,6 +58757,11 @@ var render = function() {
                     "mu-list-item",
                     { attrs: { title: "头像" } },
                     [
+                      _c("mu-avatar", {
+                        attrs: { slot: "left", src: _vm.avatar, size: 30 },
+                        slot: "left"
+                      }),
+                      _vm._v(" "),
                       _c("vue-core-image-upload", {
                         attrs: {
                           slot: "right",
@@ -58997,7 +59066,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             set: function set(value) {
                 this.$store.commit({
-                    type: __WEBPACK_IMPORTED_MODULE_0__store_mutation_types__["f" /* UPDATE_PROFILE_NAME */],
+                    type: __WEBPACK_IMPORTED_MODULE_0__store_mutation_types__["g" /* UPDATE_PROFILE_NAME */],
                     value: value
                 });
             }
@@ -59008,7 +59077,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             set: function set(value) {
                 this.$store.commit({
-                    type: __WEBPACK_IMPORTED_MODULE_0__store_mutation_types__["e" /* UPDATE_PROFILE_EMAIL */],
+                    type: __WEBPACK_IMPORTED_MODULE_0__store_mutation_types__["f" /* UPDATE_PROFILE_EMAIL */],
                     value: value
                 });
             }
@@ -59208,6 +59277,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__base_m_transition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__base_m_transition__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__base_marker_list__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__base_marker_list___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__base_marker_list__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuex__ = __webpack_require__(6);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -59246,6 +59318,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
+
 
 
 
@@ -59261,6 +59336,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             dialog: false,
+            title: '',
             body: '',
             user_id: '',
             status: false,
@@ -59274,7 +59350,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        title: function title() {
+        toUser: function toUser() {
             return this.user.name;
         },
         bgStyle: function bgStyle() {
@@ -59294,7 +59370,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
 
-    methods: {
+    methods: _extends({
         open: function open() {
             this.dialog = true;
         },
@@ -59306,19 +59382,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var formData = {
                 to_user_id: this.$route.params.id,
+                title: this.title,
                 body: this.body
             };
 
             axios.post('/api/sendMessage', formData).then(function (response) {
                 _this2.status = response.data.status;
                 _this2.close();
+                _this2.setPopup('发送成功');
             });
         },
         selectItem: function selectItem(item, index) {
             console.log(this.markers[index]);
             this.$router.push('/map/' + this.markers[index].id);
         }
-    }
+    }, Object(__WEBPACK_IMPORTED_MODULE_4_vuex__["b" /* mapActions */])(['setPopup']))
 });
 
 /***/ }),
@@ -59509,7 +59587,9 @@ var render = function() {
             _c("div", { staticClass: "content" }, [
               _c("h2", { staticClass: "name" }, [_vm._v(_vm._s(marker.title))]),
               _vm._v(" "),
-              _c("p", { staticClass: "desc" }, [_vm._v(_vm._s(marker.body))])
+              _c("p", { staticClass: "desc" }, [
+                _vm._v(_vm._s(marker.created_at))
+              ])
             ])
           ]
         )
@@ -59541,7 +59621,7 @@ var render = function() {
     [
       _c(
         "layout",
-        { attrs: { title: _vm.title, has_menu: false } },
+        { attrs: { title: _vm.toUser, has_menu: false } },
         [
           _c(
             "div",
@@ -59645,12 +59725,34 @@ var render = function() {
           _c(
             "mu-dialog",
             {
-              attrs: { open: _vm.dialog, title: _vm.title },
+              attrs: { open: _vm.dialog, title: _vm.toUser },
               on: { close: _vm.close }
             },
             [
               _c("mu-text-field", {
-                attrs: { hintText: "消息内容", name: "body", fullWidth: true },
+                attrs: {
+                  hintText: "subject: required",
+                  name: "title",
+                  fullWidth: true
+                },
+                model: {
+                  value: _vm.title,
+                  callback: function($$v) {
+                    _vm.title = $$v
+                  },
+                  expression: "title"
+                }
+              }),
+              _vm._v(" "),
+              _c("mu-text-field", {
+                attrs: {
+                  hintText: "content",
+                  name: "body",
+                  fullWidth: true,
+                  multiLine: "",
+                  rows: 3,
+                  rowsMax: 6
+                },
                 model: {
                   value: _vm.body,
                   callback: function($$v) {
@@ -59839,6 +59941,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -59875,12 +59978,7 @@ var toolbarOptions = [['bold'], // toggled buttons
                 }
             }, // 富文本编辑器配置
             list: ['营地', '路况', '风景', '天气'],
-            marker: {
-                markerType: '营地',
-                title: '',
-                body: '',
-                isHidden: false
-            },
+            marker: {},
             user: {}
         };
     },
@@ -59895,19 +59993,24 @@ var toolbarOptions = [['bold'], // toggled buttons
     },
 
     methods: _extends({
-        addMark: function addMark() {
+        editMark: function editMark() {
             var _this2 = this;
 
             var formData = {
-                markerType: this.addMarkerInfo.markerType,
-                title: this.addMarkerInfo.title,
-                body: this.addMarkerInfo.body,
-                isHidden: this.addMarkerInfo.isHidden,
-                lng: this.$route.params.lng,
-                lat: this.$route.params.lat
+                markerType: this.marker.mark_type,
+                title: this.marker.title,
+                body: this.marker.body,
+                isHidden: this.marker.isHidden
             };
-            axios.post('/api/add-mark', formData).then(function (response) {
-                _this2.$router.push('/');
+            axios.post('/api/edit-mark/' + this.$route.params.id, formData).then(function (response) {
+
+                console.log(response.data);
+                if (response.data.code === 200) {
+                    _this2.setPopup('修改成功！');
+                    _this2.$router.push({ name: 'map', params: { id: _this2.$route.params.id } });
+                } else {
+                    _this2.setPopup('修改出错！！');
+                }
             });
         },
         imageuploaded: function imageuploaded(response) {
@@ -59926,6 +60029,19 @@ var toolbarOptions = [['bold'], // toggled buttons
             } else {
                 this.setPopup('图片上传失败');
             }
+        },
+        deleteMark: function deleteMark() {
+            var _this3 = this;
+
+            axios.post('/api/delete-mark/' + this.$route.params.id).then(function (response) {
+
+                if (response.status === 200) {
+                    _this3.$router.push('/');
+                    _this3.setPopup('删除标记点成功');
+                } else {
+                    _this3.setPopup('标记点未删除');
+                }
+            });
         }
     }, Object(__WEBPACK_IMPORTED_MODULE_4_vuex__["b" /* mapActions */])(['setPopup']))
 });
@@ -59957,16 +60073,16 @@ var render = function() {
                     label: "选择分享类型"
                   },
                   model: {
-                    value: _vm.marker.markerType,
+                    value: _vm.marker.mark_type,
                     callback: function($$v) {
-                      _vm.$set(_vm.marker, "markerType", $$v)
+                      _vm.$set(_vm.marker, "mark_type", $$v)
                     },
-                    expression: "marker.markerType"
+                    expression: "marker.mark_type"
                   }
                 },
                 _vm._l(_vm.list, function(text, index) {
                   return _c("mu-menu-item", {
-                    key: index,
+                    key: text,
                     attrs: { value: text, title: text }
                   })
                 })
@@ -60039,8 +60155,14 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "mu-raised-button",
-                { attrs: { primary: "" }, on: { click: _vm.addMark } },
-                [_vm._v("创建 ")]
+                { attrs: { primary: "" }, on: { click: _vm.editMark } },
+                [_vm._v("修改")]
+              ),
+              _vm._v(" "),
+              _c(
+                "mu-raised-button",
+                { attrs: { primary: "" }, on: { click: _vm.deleteMark } },
+                [_vm._v("删除")]
               )
             ],
             1
@@ -60174,9 +60296,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -60192,13 +60311,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         axios.post('/api/message').then(function (response) {
-            _this.messages = response.data; //两个data是因为后端有分页
+            _this.messages = response.data;
             console.log(_this.messages);
         });
     },
 
     methods: {
-        deleteByUser: function deleteByUser() {}
+        deleteByUser: function deleteByUser() {
+            console.log(1);
+            axios.post('/api/message/delete/' + messages[0][0].friend).then(function (response) {
+                console.log(response.data);
+            });
+        }
     }
 });
 
@@ -60222,13 +60346,13 @@ var render = function() {
               "mu-list-item",
               {
                 key: message[0].id,
-                attrs: { title: message[0].from_user_name }
+                attrs: { title: message[0].with_friend.name }
               },
               [
                 _c("mu-avatar", {
                   attrs: {
                     slot: "leftAvatar",
-                    src: message[0].from_user.avatar
+                    src: message[0].with_friend.avatar
                   },
                   slot: "leftAvatar"
                 }),
@@ -60240,34 +60364,25 @@ var render = function() {
                       slot: "describe",
                       to: {
                         name: "message-detail",
-                        params: { id: message[0].from_user_id }
+                        params: { id: message[0].friend }
                       }
                     },
                     slot: "describe"
                   },
-                  [_vm._v(_vm._s(message[0].body))]
+                  [
+                    _vm._v(
+                      _vm._s(message[0].title) +
+                        "  (" +
+                        _vm._s(message.length) +
+                        ")"
+                    )
+                  ]
                 ),
                 _vm._v(" "),
-                _c(
-                  "mu-icon-menu",
-                  {
-                    attrs: {
-                      slot: "right",
-                      icon: "more_vert",
-                      tooltip: "操作"
-                    },
-                    slot: "right"
-                  },
-                  [
-                    _c("mu-menu-item", { attrs: { title: "回复" } }),
-                    _vm._v(" "),
-                    _c("mu-menu-item", {
-                      attrs: { title: "删除" },
-                      on: { event: _vm.deleteByUser }
-                    })
-                  ],
-                  1
-                )
+                _c("mu-icon", {
+                  attrs: { slot: "right", value: "chevron_right" },
+                  slot: "right"
+                })
               ],
               1
             )
@@ -60377,7 +60492,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.float-button[data-v-cde384ee] {\n    position: fixed;\n    right: 20px;\n    bottom: 20px;\n}\n", ""]);
 
 // exports
 
@@ -60390,6 +60505,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(6);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 //
 //
 //
@@ -60401,6 +60519,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -60409,17 +60541,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     name: "message-detail",
     data: function data() {
         return {
-            messages: []
+            dialog: false,
+            messages: [],
+            title: '',
+            body: ''
         };
     },
-    mounted: function mounted() {
+    created: function created() {
         var _this = this;
 
         axios.post('/api/message/' + this.$route.params.id).then(function (response) {
             _this.messages = response.data;
+            _this.title = _this.messages[0].title;
             console.log(_this.messages);
         });
-    }
+    },
+    mounted: function mounted() {},
+
+    methods: _extends({
+        open: function open() {
+            this.dialog = true;
+        },
+        close: function close() {
+            this.dialog = false;
+        },
+        sendMessage: function sendMessage() {
+            var _this2 = this;
+
+            var formData = {
+                to_user_id: this.$route.params.id,
+                title: this.title,
+                body: this.body
+            };
+
+            axios.post('/api/sendMessage', formData).then(function (response) {
+                _this2.status = response.data.status;
+                _this2.close();
+                _this2.setPopup('发送成功');
+                axios.post('/api/message/' + _this2.$route.params.id).then(function (response) {
+                    _this2.messages = response.data;
+                    _this2.title = _this2.messages[0].title;
+                    console.log(_this2.messages);
+                });
+            });
+        }
+    }, Object(__WEBPACK_IMPORTED_MODULE_1_vuex__["b" /* mapActions */])(['setPopup']))
 });
 
 /***/ }),
@@ -60436,34 +60602,83 @@ var render = function() {
     [
       _c(
         "mu-list",
+        _vm._l(_vm.messages, function(message) {
+          return _c(
+            "div",
+            { key: message.id },
+            [
+              _c("mu-sub-header", [
+                _vm._v("from: " + _vm._s(message.from_user_name))
+              ]),
+              _vm._v(" "),
+              _c("mu-list-item", {
+                attrs: { title: message.body, describeText: message.created_at }
+              }),
+              _vm._v(" "),
+              _c("mu-divider")
+            ],
+            1
+          )
+        })
+      ),
+      _vm._v(" "),
+      _c("mu-float-button", {
+        staticClass: "float-button",
+        attrs: { icon: "edit" },
+        on: { click: _vm.open }
+      }),
+      _vm._v(" "),
+      _c(
+        "mu-dialog",
+        { attrs: { open: _vm.dialog }, on: { close: _vm.close } },
         [
-          _vm._l(_vm.messages, function(message) {
-            return _c(
-              "mu-list-item",
-              { key: message.id, attrs: { title: message.from_user_name } },
-              [
-                _c(
-                  "router-link",
-                  {
-                    attrs: {
-                      slot: "describe",
-                      to: {
-                        name: "message-detail",
-                        params: { id: message.from_user_id }
-                      }
-                    },
-                    slot: "describe"
-                  },
-                  [_vm._v(_vm._s(message.body))]
-                )
-              ],
-              1
-            )
+          _c("mu-text-field", {
+            attrs: {
+              hintText: "subject: required",
+              name: "title",
+              fullWidth: true,
+              disabled: ""
+            },
+            model: {
+              value: _vm.title,
+              callback: function($$v) {
+                _vm.title = $$v
+              },
+              expression: "title"
+            }
           }),
           _vm._v(" "),
-          _c("mu-divider", { attrs: { inset: "" } })
+          _c("mu-text-field", {
+            attrs: {
+              hintText: "content",
+              name: "body",
+              fullWidth: true,
+              multiLine: "",
+              rows: 3,
+              rowsMax: 6
+            },
+            model: {
+              value: _vm.body,
+              callback: function($$v) {
+                _vm.body = $$v
+              },
+              expression: "body"
+            }
+          }),
+          _vm._v(" "),
+          _c("mu-flat-button", {
+            attrs: { slot: "actions", primary: "", label: "取消" },
+            on: { click: _vm.close },
+            slot: "actions"
+          }),
+          _vm._v(" "),
+          _c("mu-flat-button", {
+            attrs: { slot: "actions", primary: "", label: "发送" },
+            on: { click: _vm.sendMessage },
+            slot: "actions"
+          })
         ],
-        2
+        1
       )
     ],
     1
@@ -60543,6 +60758,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Comment__ = __webpack_require__(186);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common_Comment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__common_Comment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__base_m_transition__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__base_m_transition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__base_m_transition__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 //
@@ -60593,6 +60810,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+
 
 
 
@@ -60600,6 +60821,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
+        MTransition: __WEBPACK_IMPORTED_MODULE_3__base_m_transition___default.a,
         Comment: __WEBPACK_IMPORTED_MODULE_1__common_Comment___default.a,
         Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
     name: "mark-detail",
@@ -60611,7 +60833,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             markerId: '',
             body: '',
             comments: [],
-            is_favorite: false,
+            is_favorite: '',
             is_edit: false,
             creater: {}
         };
@@ -60630,7 +60852,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         });
 
         axios.post('/api/is-favorited/' + this.$route.params.id).then(function (response) {
-            _this.is_favorite = response.data;
+            if (response.data) {
+                _this.is_favorite = 'favorites';
+            } else {
+                _this.is_favorite = '';
+            }
         });
     },
 
@@ -60661,19 +60887,21 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             });
         },
         showComments: function showComments() {
-            var _this3 = this;
-
-            axios.get('/api/show-comments/' + this.$route.params.id).then(function (response) {
-                console.log(response.data);
-                _this3.comments = response.data;
-            });
+            this.$router.push({ name: 'comments-list', params: { id: this.$route.params.id } });
         },
         addFavorite: function addFavorite() {
-            var _this4 = this;
+            var _this3 = this;
 
             axios.post('/api/add-favorite/' + this.$route.params.id).then(function (response) {
-                _this4.is_favorite = response.data;
+                if (response.data) {
+                    _this3.is_favorite = 'favorites';
+                } else {
+                    _this3.is_favorite = '';
+                }
             });
+        },
+        editMark: function editMark() {
+            this.$router.push({ name: 'edit-marker', params: { id: this.$route.params.id } });
         }
     }
 });
@@ -60990,7 +61218,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -61003,6 +61231,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+//
+//
 //
 //
 //
@@ -61051,11 +61281,41 @@ var render = function() {
         "div",
         { key: favorite.id },
         [
-          _c("mu-sub-header", [_vm._v(_vm._s(favorite.map.title))]),
+          _c(
+            "mu-sub-header",
+            [
+              _c(
+                "router-link",
+                {
+                  attrs: {
+                    to: { name: "mark-detail", params: { id: favorite.map.id } }
+                  }
+                },
+                [_vm._v(_vm._s(favorite.map.title))]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
-          _c("mu-sub-header", [
-            _vm._v(" 创建者: " + _vm._s(favorite.user.name) + " ")
-          ]),
+          _c(
+            "mu-sub-header",
+            [
+              _vm._v(" 创建者："),
+              _c(
+                "router-link",
+                {
+                  attrs: {
+                    to: {
+                      name: "user-profile",
+                      params: { id: favorite.user.id }
+                    }
+                  }
+                },
+                [_vm._v(_vm._s(favorite.user.name))]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c("mu-sub-header", [
             _vm._v("创建时间: " + _vm._s(favorite.map.created_at))
@@ -61302,19 +61562,19 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(203)
+  __webpack_require__(258)
 }
 var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(205)
 /* template */
-var __vue_template__ = __webpack_require__(206)
+var __vue_template__ = __webpack_require__(260)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-6f2539dd"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -61347,46 +61607,8 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 203 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(204);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(2)("4d717914", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6f2539dd\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MyComments.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6f2539dd\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MyComments.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 204 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 203 */,
+/* 204 */,
 /* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -61394,17 +61616,32 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__common_Layout__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__base_m_transition__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__base_m_transition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__base_m_transition__);
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    components: { Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
+    components: { MTransition: __WEBPACK_IMPORTED_MODULE_1__base_m_transition___default.a, Layout: __WEBPACK_IMPORTED_MODULE_0__common_Layout___default.a },
     name: "my-comments",
     data: function data() {
         return {
@@ -61422,26 +61659,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 206 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("layout", { attrs: { title: "我的评论", has_menu: false } })
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6f2539dd", module.exports)
-  }
-}
-
-/***/ }),
+/* 206 */,
 /* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -80858,7 +81076,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n.panel-body img{\n    width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.panel-body img{\n    width: 100%;\n}\n.footer-wrap {\n    position: fixed;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -80871,154 +81089,159 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("layout", { attrs: { title: "详情", has_menu: false } }, [
-    _c(
-      "div",
-      {},
-      [
-        _c("mu-sub-header", [_vm._v(_vm._s(_vm.marker.title))]),
-        _vm._v(" "),
-        _c(
-          "mu-sub-header",
-          [
-            _vm._v(" 创建者："),
-            _c(
-              "router-link",
-              {
-                attrs: {
-                  to: { name: "user-profile", params: { id: _vm.creater.id } }
-                }
-              },
-              [_vm._v(_vm._s(_vm.creater.name))]
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("mu-sub-header", [
-          _vm._v(" 创建时间：" + _vm._s(_vm.marker.created_at) + " ")
-        ]),
-        _vm._v(" "),
-        _c("mu-divider"),
-        _vm._v(" "),
-        _c(
-          "mu-content-block",
-          [
-            _c("mu-sub-header", [
-              _vm._v(" 类型：" + _vm._s(_vm.marker.mark_type) + " ")
-            ]),
-            _vm._v(" "),
-            _c("div", {
-              staticClass: "panel-body",
-              domProps: { innerHTML: _vm._s(_vm.marker.body) }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
+  return _c(
+    "m-transition",
+    [
+      _c("layout", { attrs: { title: "详情", has_menu: false } }, [
         _c(
           "div",
-          { staticClass: "text-center" },
+          {},
           [
-            !_vm.is_favorite
-              ? _c("mu-raised-button", {
-                  attrs: { label: "收藏", primary: "" },
-                  on: { click: _vm.addFavorite }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.is_favorite
-              ? _c("mu-raised-button", {
-                  attrs: { label: "取消收藏" },
-                  on: { click: _vm.addFavorite }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.is_edit
-              ? _c("mu-raised-button", {
-                  attrs: {
-                    label: "编辑",
-                    to: {
-                      name: "edit-marker",
-                      params: { id: this.$route.params.id }
-                    },
-                    primary: ""
-                  }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _c("mu-raised-button", {
-              attrs: { label: "评论", primary: "" },
-              on: { click: _vm.open }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "mu-dialog",
-          {
-            attrs: { open: _vm.dialog, title: "评论" },
-            on: { close: _vm.close }
-          },
-          [
-            _vm._l(_vm.comments, function(comment) {
-              return _c(
-                "div",
-                { key: comment.id },
-                [
-                  _c("mu-sub-header", [_vm._v(_vm._s(comment.user.name))]),
-                  _vm._v(" "),
-                  _c("mu-content-block", [
-                    _c("p", [_vm._v(_vm._s(comment.body))])
-                  ])
-                ],
-                1
-              )
-            }),
+            _c("mu-sub-header", [_vm._v(_vm._s(_vm.marker.title))]),
             _vm._v(" "),
             _c(
-              "div",
+              "mu-sub-header",
               [
-                _c("mu-text-field", {
-                  attrs: {
-                    hintText: "多行文本输入，默认 3行，最大6行",
-                    name: "body",
-                    multiLine: "",
-                    rows: 1,
-                    rowsMax: 2,
-                    fullWidth: true
+                _vm._v(" 创建者："),
+                _c(
+                  "router-link",
+                  {
+                    attrs: {
+                      to: {
+                        name: "user-profile",
+                        params: { id: _vm.creater.id }
+                      }
+                    }
                   },
-                  model: {
-                    value: _vm.body,
-                    callback: function($$v) {
-                      _vm.body = $$v
-                    },
-                    expression: "body"
-                  }
-                }),
+                  [_vm._v(_vm._s(_vm.creater.name))]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("mu-sub-header", [
+              _vm._v(" 创建时间：" + _vm._s(_vm.marker.created_at) + " ")
+            ]),
+            _vm._v(" "),
+            _c("mu-divider"),
+            _vm._v(" "),
+            _c(
+              "mu-content-block",
+              [
+                _c("mu-sub-header", [
+                  _vm._v(" 类型：" + _vm._s(_vm.marker.mark_type) + " ")
+                ]),
                 _vm._v(" "),
-                _c("mu-flat-button", {
-                  attrs: { slot: "actions", primary: "", label: "取消" },
-                  on: { click: _vm.close },
-                  slot: "actions"
-                }),
-                _vm._v(" "),
-                _c("mu-flat-button", {
-                  attrs: { slot: "actions", primary: "", label: "发送" },
-                  on: { click: _vm.sendMessage },
-                  slot: "actions"
+                _c("div", {
+                  staticClass: "panel-body",
+                  domProps: { innerHTML: _vm._s(_vm.marker.body) }
                 })
               ],
               1
+            ),
+            _vm._v(" "),
+            _c("mu-paper", { staticClass: "footer-wrap" }, [
+              _c(
+                "div",
+                { staticClass: "text-center" },
+                [
+                  !_vm.is_favorite
+                    ? _c("mu-raised-button", {
+                        attrs: { label: "收藏", primary: "" },
+                        on: { click: _vm.addFavorite }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.is_favorite
+                    ? _c("mu-raised-button", {
+                        attrs: { label: "取消收藏" },
+                        on: { click: _vm.addFavorite }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("mu-raised-button", {
+                    attrs: { label: "评论", primary: "" },
+                    on: { click: _vm.showComments }
+                  }),
+                  _vm._v(" "),
+                  _vm.is_edit
+                    ? _c("mu-raised-button", {
+                        attrs: { label: "编辑", primary: "" },
+                        on: { click: _vm.editMark }
+                      })
+                    : _vm._e()
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "mu-dialog",
+              {
+                attrs: { open: _vm.dialog, title: "评论" },
+                on: { close: _vm.close }
+              },
+              [
+                _vm._l(_vm.comments, function(comment) {
+                  return _c(
+                    "div",
+                    { key: comment.id },
+                    [
+                      _c("mu-sub-header", [_vm._v(_vm._s(comment.user.name))]),
+                      _vm._v(" "),
+                      _c("mu-content-block", [
+                        _c("p", [_vm._v(_vm._s(comment.body))])
+                      ])
+                    ],
+                    1
+                  )
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _c("mu-text-field", {
+                      attrs: {
+                        hintText: "多行文本输入，默认 3行，最大6行",
+                        name: "body",
+                        multiLine: "",
+                        rows: 1,
+                        rowsMax: 2,
+                        fullWidth: true
+                      },
+                      model: {
+                        value: _vm.body,
+                        callback: function($$v) {
+                          _vm.body = $$v
+                        },
+                        expression: "body"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("mu-flat-button", {
+                      attrs: { slot: "actions", primary: "", label: "取消" },
+                      on: { click: _vm.close },
+                      slot: "actions"
+                    }),
+                    _vm._v(" "),
+                    _c("mu-flat-button", {
+                      attrs: { slot: "actions", primary: "", label: "发送" },
+                      on: { click: _vm.sendMessage },
+                      slot: "actions"
+                    })
+                  ],
+                  1
+                )
+              ],
+              2
             )
           ],
-          2
+          1
         )
-      ],
-      1
-    )
-  ])
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -81391,6 +81614,521 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-cb428118", module.exports)
+  }
+}
+
+/***/ }),
+/* 250 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(255)
+}
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(253)
+/* template */
+var __vue_template__ = __webpack_require__(257)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/pages/CommentsList.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4fc4a914", Component.options)
+  } else {
+    hotAPI.reload("data-v-4fc4a914", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 251 */,
+/* 252 */,
+/* 253 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base_m_transition__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base_m_transition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__base_m_transition__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_core_image_upload__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_core_image_upload___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_core_image_upload__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common_Layout__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common_Layout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__common_Layout__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_jwt__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuex__ = __webpack_require__(6);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+var toolbarOptions = [['bold'], // toggled buttons
+['link', 'image'], ['clean'] // remove formatting button
+];
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "CommentsList",
+    components: { Layout: __WEBPACK_IMPORTED_MODULE_2__common_Layout___default.a, MTransition: __WEBPACK_IMPORTED_MODULE_0__base_m_transition___default.a, VueCoreImageUpload: __WEBPACK_IMPORTED_MODULE_1_vue_core_image_upload___default.a },
+    data: function data() {
+        return {
+            dialog: false,
+            body: '',
+            comments: [],
+            headers: { Authorization: 'Bearer ' + __WEBPACK_IMPORTED_MODULE_3__helpers_jwt__["a" /* default */].getToken() },
+            editorOption: {
+                placeholder: '',
+                theme: 'snow', // or 'bubble'
+                modules: {
+                    toolbar: {
+                        container: toolbarOptions, // 工具栏
+                        handlers: {
+                            'image': function image(value) {
+                                if (value) {
+                                    document.querySelector('.img-uploader input').click();
+                                } else {
+                                    this.quill.format('image', false);
+                                }
+                            }
+                        }
+                    }
+                }
+            } // 富文本编辑器配置
+        };
+    },
+
+    methods: _extends({
+        open: function open() {
+            this.dialog = true;
+        },
+        close: function close() {
+            this.dialog = false;
+        },
+        sendComment: function sendComment() {
+            var _this = this;
+
+            var formData = {
+                marker_id: this.$route.params.id,
+                body: this.body
+            };
+
+            axios.post('/api/addComments', formData).then(function (response) {
+                _this.status = response.data;
+                _this.close();
+
+                axios.get('/api/show-comments/' + _this.$route.params.id).then(function (response) {
+                    console.log(response.data);
+                    _this.comments = response.data;
+                });
+            });
+        },
+        imageuploaded: function imageuploaded(response) {
+            // 获取富文本组件实例
+            var quill = this.$refs.myQuillEditor.quill;
+            // 如果上传成功
+            console.log(response.code);
+            console.log(response.info);
+            if (response.code === '200' && response.info !== null) {
+                // 获取光标所在位置
+                var length = quill.getSelection().index;
+                // 插入图片  res.info为服务器返回的图片地址
+                quill.insertEmbed(length, 'image', response.info);
+                // 调整光标到最后
+                quill.setSelection(length + 1);
+            } else {
+                this.setPopup('图片上传失败');
+            }
+        }
+    }, Object(__WEBPACK_IMPORTED_MODULE_4_vuex__["b" /* mapActions */])(['setPopup'])),
+    mounted: function mounted() {
+        var _this2 = this;
+
+        axios.get('/api/show-comments/' + this.$route.params.id).then(function (response) {
+            console.log(response.data);
+            _this2.comments = response.data;
+        });
+    }
+});
+
+/***/ }),
+/* 254 */,
+/* 255 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(256);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("c0510192", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4fc4a914\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CommentsList.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4fc4a914\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CommentsList.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 256 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.panel-body img{\n    width: 80%;\n}\n.float-button {\n    position: fixed;\n    right: 20px;\n    bottom: 20px;\n}\n.quill-editor:not(.bubble) .ql-container,\n.quill-editor:not(.bubble) .ql-container .ql-editor {\n    height: 10rem;\n    padding-bottom: 1rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 257 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "m-transition",
+    { attrs: { type: "slide" } },
+    [
+      _c(
+        "layout",
+        { attrs: { has_menu: false, title: "评论" } },
+        [
+          _vm._l(_vm.comments, function(comment) {
+            return _c(
+              "div",
+              { key: comment.id },
+              [
+                _c(
+                  "mu-sub-header",
+                  [
+                    _c("mu-avatar", {
+                      attrs: { src: comment.user.avatar, size: 25 }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "router-link",
+                      {
+                        attrs: {
+                          to: {
+                            name: "user-profile",
+                            params: { id: comment.user.id }
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(comment.user.name))]
+                    ),
+                    _vm._v(
+                      "\n                 " +
+                        _vm._s(comment.created_at) +
+                        "\n            "
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("mu-content-block", [
+                  _c("div", {
+                    staticClass: "panel-body",
+                    domProps: { innerHTML: _vm._s(comment.body) }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("mu-divider")
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c("mu-float-button", {
+            staticClass: "float-button",
+            attrs: { icon: "edit" },
+            on: { click: _vm.open }
+          }),
+          _vm._v(" "),
+          _c(
+            "mu-dialog",
+            {
+              attrs: { open: _vm.dialog, title: "评论" },
+              on: { close: _vm.close }
+            },
+            [
+              _c(
+                "div",
+                [
+                  _c(
+                    "div",
+                    [
+                      _c("vue-core-image-upload", {
+                        staticClass: "img-uploader",
+                        attrs: {
+                          crop: false,
+                          "max-file-size": 5242880,
+                          inputOfFile: "img",
+                          url: "/api/uploadImage",
+                          text: " ",
+                          headers: _vm.headers
+                        },
+                        on: { imageuploaded: _vm.imageuploaded }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        [
+                          _c("quill-editor", {
+                            ref: "myQuillEditor",
+                            attrs: { options: _vm.editorOption },
+                            model: {
+                              value: _vm.body,
+                              callback: function($$v) {
+                                _vm.body = $$v
+                              },
+                              expression: "body"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("mu-flat-button", {
+                    attrs: { slot: "actions", primary: "", label: "取消" },
+                    on: { click: _vm.close },
+                    slot: "actions"
+                  }),
+                  _vm._v(" "),
+                  _c("mu-flat-button", {
+                    attrs: { slot: "actions", primary: "", label: "发送" },
+                    on: { click: _vm.sendComment },
+                    slot: "actions"
+                  })
+                ],
+                1
+              )
+            ]
+          )
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4fc4a914", module.exports)
+  }
+}
+
+/***/ }),
+/* 258 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(259);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("bb9cb332", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6f2539dd\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MyComments.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6f2539dd\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MyComments.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 259 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.panel-body img{\n    width: 80%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 260 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "m-transition",
+    { attrs: { type: "slide" } },
+    [
+      _c(
+        "layout",
+        { attrs: { title: "我的评论", has_menu: false } },
+        _vm._l(_vm.comments, function(comment) {
+          return _c(
+            "div",
+            { key: comment.id },
+            [
+              _c(
+                "mu-sub-header",
+                [
+                  _c(
+                    "router-link",
+                    {
+                      attrs: {
+                        to: {
+                          name: "mark-detail",
+                          params: { id: comment.map.id }
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(comment.map.title))]
+                  ),
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(comment.created_at) +
+                      "\n            "
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("mu-content-block", [
+                _c("div", {
+                  staticClass: "panel-body",
+                  domProps: { innerHTML: _vm._s(comment.body) }
+                })
+              ]),
+              _vm._v(" "),
+              _c("mu-divider")
+            ],
+            1
+          )
+        })
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6f2539dd", module.exports)
   }
 }
 
