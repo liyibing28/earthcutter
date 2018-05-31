@@ -61178,7 +61178,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n.panel-body img{\n    width: 100%;\n}\n.footer-wrap {\n    position: fixed;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.panel-body img{\n    width: 100%;\n}\n.footer-wrap {\n    position: fixed;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n}\nbutton {\n    width: 15%;\n}\n", ""]);
 
 // exports
 
@@ -61198,6 +61198,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__base_m_transition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__base_m_transition__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
 //
 //
 //
@@ -61270,6 +61273,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             body: '',
             comments: [],
             is_favorite: '',
+            is_vote: '',
             is_edit: false,
             creater: {}
         };
@@ -61333,6 +61337,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                     _this3.is_favorite = 'favorites';
                 } else {
                     _this3.is_favorite = '';
+                }
+            });
+        },
+        vote: function vote() {
+            var _this4 = this;
+
+            axios.post('/api/vote/' + this.$route.params.id).then(function (response) {
+                if (response.data) {
+                    _this4.is_vote = 'vote';
+                } else {
+                    _this4.is_favorite = '';
                 }
             });
         },
@@ -61642,6 +61657,20 @@ var render = function() {
                     ? _c("mu-raised-button", {
                         attrs: { label: "取消收藏" },
                         on: { click: _vm.addFavorite }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !_vm.is_vote
+                    ? _c("mu-raised-button", {
+                        attrs: { label: "positive", primary: "" },
+                        on: { click: _vm.vote }
+                      })
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.is_vote
+                    ? _c("mu-raised-button", {
+                        attrs: { label: "positive" },
+                        on: { click: _vm.vote }
                       })
                     : _vm._e(),
                   _vm._v(" "),

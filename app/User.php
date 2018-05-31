@@ -59,4 +59,13 @@ class User extends Authenticatable
     public function hasMarkers(){
         return $this->hasMany(Map::class,'user_id');
     }
+
+    //定义点赞
+    public function votes(){
+        $this->belongsToMany(Map::class, 'votes')->withTimestamps();
+    }
+
+    public function voteFor($mark){
+         return $this->votes()->toggle($mark );
+    }
 }

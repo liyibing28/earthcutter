@@ -57,6 +57,7 @@ Route::post('/uploadImage', 'MapController@uploadImage');
 
 Route::post('/user/follow/{id}', 'FollowersController@follow');
 Route::get('/user/followed/{id}', 'FollowersController@index');
+Route::post('/vote/{id}', 'VotesController@vote');
 
 
 Route::get('/user/{userId}','UsersController@getUserById');

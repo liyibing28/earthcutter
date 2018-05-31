@@ -19,6 +19,9 @@
                     <mu-raised-button label="收藏" @click="addFavorite" v-if="!is_favorite" primary></mu-raised-button>
                     <mu-raised-button label="取消收藏" @click="addFavorite" v-if="is_favorite" ></mu-raised-button>
 
+                    <mu-raised-button label="positive" @click="vote" v-if="!is_vote" primary></mu-raised-button>
+                    <mu-raised-button label="positive" @click="vote" v-if="is_vote" ></mu-raised-button>
+
                     <mu-raised-button label="评论" @click="showComments" primary/>
 
                     <mu-raised-button v-if="is_edit" label="编辑" @click="editMark" primary/>
@@ -70,6 +73,7 @@
                 body : '',
                 comments: [],
                 is_favorite : '',
+                is_vote : '',
                 is_edit: false,
                 creater:{},
             }
@@ -133,6 +137,16 @@
                     }
                 });
             },
+            vote(){
+                axios.post('/api/vote/' + this.$route.params.id).then(response =>{
+                    if (response.data){
+                        this.is_vote = 'vote';
+                    }
+                    else{
+                        this.is_favorite = '';
+                    }
+                });
+            },
             editMark(){
                 this.$router.push({name: 'edit-marker', params:{id: this.$route.params.id}});
             }
@@ -150,5 +164,9 @@
         left: 0;
         right: 0;
         width: 100%;
+    }
+
+    button {
+        width: 15%;
     }
 </style>
