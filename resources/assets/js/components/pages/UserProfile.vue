@@ -7,9 +7,13 @@
                             <i class="material-icons">message</i>
                             <span class="text">发送私信</span>
                         </div>
-                        <div class="favor" v-show="true" @click="" ref="favorBtn">
+                        <div v-if="!isFollowed" class="favor" v-show="true" @click="" ref="favorBtn">
                             <i class="material-icons">favorite</i>
                             <span class="text">关注</span>
+                        </div>
+                        <div v-if="isFollowed" class="favor" v-show="true" @click="" ref="favorBtn">
+                            <i class="material-icons">favorite</i>
+                            <span class="text">取消关注</span>
                         </div>
                     </div>
                     <div class="filter" ref="filter"></div>
@@ -64,6 +68,7 @@
                     default: ''
                 },
                 markers:[],
+                isFollowed: false,
             }
         },
         computed:{
@@ -81,6 +86,10 @@
                 this.bgImage = this.user.avatar;
                 console.log(this.bgImage);
                 console.log(this.markers);
+            });
+
+            axios.get('/api/user/followed/' + this.$route.params.id).then(response => {
+
             });
         },
 

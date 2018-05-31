@@ -13,9 +13,13 @@ use App\User;
 
 class UserRepository
 {
-    public function findUserById($userId)
+    public function findUserById($id)
     {
-        return User::find($userId)->with('hasMarkers')->get();
+        return User::find($id)->with('hasMarkers')->get();
         //return User::where('id',$userId)->get();
+    }
+
+    public function byId($id){
+        return User::find($id);
     }
 }

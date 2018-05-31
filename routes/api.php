@@ -55,6 +55,10 @@ Route::post('/avatar','UsersController@changAvatar');
 
 Route::post('/uploadImage', 'MapController@uploadImage');
 
+Route::post('/user/follow/{id}', 'FollowersController@follow');
+Route::get('/user/followed/{id}', 'FollowersController@index');
+
+
 Route::get('/user/{userId}','UsersController@getUserById');
 Route::get('/email/verify/{token}',[
     'as' => 'email.verify',

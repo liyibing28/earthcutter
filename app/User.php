@@ -28,7 +28,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function favorite( ){
+    public function favorite(){
         return $this->belongsToMany(Map::class,'user_map')->withTimestamps();
     }
 
@@ -38,6 +38,18 @@ class User extends Authenticatable
 
     public function followed($map){ //用户已经收藏这个问题
         return !! $this->favorite()->where('map_id',$map)->count( );
+    }
+
+    public function followers(){
+        return $this->belongsToMany(self::class,'followers','follower_id', 'followed_id')->withTimestamps();
+    }
+
+    public function followersUser(){
+        return $this->belongsToMany(self::class,'followers','followed_id', 'follower_id')->withTimestamps();
+    }
+
+    public function followThisUser($user){
+        return $this->followers()->toggle($user);
     }
 
     public function messages(){

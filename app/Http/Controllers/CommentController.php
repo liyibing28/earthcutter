@@ -3,32 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Repository\CommentRepository;
+use App\Repository\MapRepository;
 use Illuminate\Http\Request;
 use Auth;
 
 class CommentController extends Controller
 {
-    protected $commentRepositry;
+    protected $commentRepository;
+    protected $mapRepository;
 
     /**
      * CommentController constructor.
-     * @param $commentRepositry
+     * @param $commentRepository
+     * @param $mapRepository
      */
-    public function __construct(CommentRepository $commentRepositry)
+    public function __construct(CommentRepository $commentRepository,MapRepository $mapRepository)
     {
-        $this->commentRepositry = $commentRepositry;
+        $this->commentRepository = $commentRepository;
+        $this->mapRepository = $mapRepository;
     }
 
 
     public function showComments($markerId){
-        $comments = $this->commentRepositry->show($markerId);
+        $comments = $this->commentRepository->show($markerId);
 
         return response()->json($comments);
     }
 
     public function showMyComments(){
         $user_id = auth()->guard('api')->user()->id;
-        $comments = $this->commentRepositry->showByUser($user_id);
+        $comments = $this->commentRepository->showByUser($user_id);
 
         return response()->json($comments);
     }
@@ -37,7 +41,7 @@ class CommentController extends Controller
 
     public function addComments(){
 
-        $comment = $this->commentRepositry->create([
+        $comment = $this->commentRepository->create([
             'user_id' =>  auth()->guard('api')->user()->id,
             'marker_id' => \request('marker_id'),
             'body' => \request('body'),
@@ -45,6 +49,8 @@ class CommentController extends Controller
 
         if($comment)
         {
+            $mark = $this->mapRepository->find(request('marker_id'));
+            $mark->increment('comments_count');
             return response()->json('success!');
         }
         else{
